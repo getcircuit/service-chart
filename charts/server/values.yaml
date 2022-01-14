@@ -1,0 +1,18 @@
+repo: europe-west2-docker.pkg.dev/circuit-api-284012/getcircuit
+version: latest
+name: null
+port: 8080
+resources:
+  limits:
+    cpu: 500m
+    memory: '512Mi'
+env: null
+public: true
+cluster: circuit-1
+host: getcircuit.io
+gateway: public
+minReplicas: 1
+maxReplicas: 10
+targetCPU: 50
+metrics:
+  enabled: true

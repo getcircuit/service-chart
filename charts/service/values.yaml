@@ -18,5 +18,3 @@ default:
   public: true
   metricsInterval: 15s
 environments:
-- production: true
-- name: staging

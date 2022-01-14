@@ -1,4 +1,5 @@
 # Service chart
+> Current default cluster: **circuit-1**
 
 This the helm chart definition for Circuit's services running in Kubernetes. It follows the deployment pattern using [github pages](https://helm.sh/docs/howto/chart_releaser_action/).
 
@@ -30,7 +31,7 @@ The service should be configured at `values.yaml`, here's its API:
 `Environment`:
 | Field       | Description                                                                                                                                                                                       | Type              | Required                             | Default       |
 |-------------|---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|-------------------|--------------------------------------|---------------|
-| name        | Environment name (defines environment host: {{environment-name}}.{{service-name}}.{{cluster-id}}.getcircuit.io                                                                                    | string            | true (if `production` is not `true`) | N/A           |
+| name        | Environment name (defines environment host: {{environment-name}}.{{service-name}}.{{cluster-id}}.getcircuit.io                                                                               | string            | true (if `production` is not `true`) | N/A           |
 | port        | Port number the container will expose                                                                                                                                                             | number            | false                                | 8080          |
 | production  | Defines if the environment is production. Production host is {{service-name}}.{{cluster-id}}.getcircuit.io. A production environment does not require a name (its name will be the service name). | string            | false                                | circuit-1     |
 | minReplicas | Minimum number of service horizontal replicas                                                                                                                                                     | number            | false                                | 1             |
@@ -40,6 +41,15 @@ The service should be configured at `values.yaml`, here's its API:
 | public      | Defines whether a public host should be provided for the service or not                                                                                                                           | bool              | false                                | true          |
 | env         | Defines environment's env vars                                                                                                                                                                    | map[string]string | false                                | N/A           |
 | resources   | Defines environment's resources                                                                                                                                                                   | Resources         | false                                | See Resources |
+| metrics     | Defines metric scraping                                                                                                                                                                           | Metrics           | false                                | N/A           |
+
+
+`Metrics`:
+
+| Field    | Description                                                                                                                              | Type   | Required | Default |
+|----------|------------------------------------------------------------------------------------------------------------------------------------------|--------|----------|---------|
+| enabled  | If metric scraping should be enabled. Only use this if your app [was instrumented](https://prometheus.io/docs/instrumenting/clientlibs/) | bool   | false    | false   |
+| interval | What interval the metrics should be scraped (e.g 10s)                                                                                    | string | false    | 15s     |
 
 
 

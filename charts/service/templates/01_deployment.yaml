@@ -1,43 +1,71 @@
 {{- if not .Values.name }}
   {{ fail "You must provide a `service.name` in values.yaml" }}
 {{- end }}
-{{ $namespace := .Values.namespace | default "apps" }}
+{{ $repo := .Values.repo | default .Values.default.repo }}
+{{ $namespace := .Values.namespace | default .Values.default.namespace }}
+{{- range $k, $environment := .Values.environments }}
+{{ $version := $environment.version | default $.Values.default.version }}
+{{- if not $environment.name }}
+  {{ fail "You must provide a `service.environments[].name` in values.yaml" }}
+{{- end }}
+{{ $cpuLimit := $.Values.default.cpuLimit }}
+{{ $memoryLimit := $.Values.default.memoryLimit }}
+{{ $requestedCpu := "" }}
+{{ $requestedMemory := "" }}
+{{- if $environment.resources }}
+{{- if $environment.resources.requests }}
+{{ $requestedMemory = $environment.resources.requests.memory }}
+{{ $requestedCpu = $environment.resources.requests.cpu }}
+{{- end }}
+{{- if $environment.resources.limits }}
+{{ $memoryLimit = $environment.resources.limits.memory }}
+{{ $cpuLimit = $environment.resources.limits.cpu }}
+{{- end }}
+{{- end }}
+{{ $name := printf "%s--%s" $environment.name $.Values.name }}
+{{ if $environment.production }}
+{{ $name = $.Values.name }}
+{{- end }}
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: {{ .Values.name | quote }}
+  name: {{ $name }}
   namespace: {{ $namespace }}
   labels:
-    app.kubernetes.io/name: {{ .Values.name | quote }}
+    app.kubernetes.io/name: {{ $name }}
+    circuit/service-name: {{ $.Values.name }}
 spec:
   selector:
     matchLabels:
-      app.kubernetes.io/name: {{ .Values.name | quote }}
+      app.kubernetes.io/name: {{ $name }}
   template:
     metadata:
       labels:
-        app.kubernetes.io/name: {{ .Values.name | quote }}
+        app.kubernetes.io/name: {{ $name }}
+        circuit/service-name: {{ $.Values.name }}
     spec:
       containers:
-        - name: {{ .Values.name | quote }}
-          image: {{ printf "%s/%s:%s" .Values.repo .Values.name .Values.version }}
+        - name: {{ $name }}
+          image: {{ printf "%s/%s:%s" $repo $.Values.name $version }}
           ports:
           - name: http
-            containerPort: {{ .Values.port }}
+            containerPort: {{ $environment.port | default $.Values.default.port }}
           imagePullPolicy: IfNotPresent
           resources: 
-            {{- if .Values.resources.requests }}
+            {{- if $requestedCpu }}
             requests:
-              memory: {{ .Values.resources.requests.memory }}
-              cpu: {{ .Values.resources.requests.cpu }}
+              memory: {{ $requestedCpu }}
+              cpu: {{ $requestedMemory }}
             {{- end }}
             limits:
-              memory: {{ .Values.resources.limits.memory }}
-              cpu: {{ .Values.resources.limits.cpu }}
-          {{- if .Values.env }}
+              memory: {{ $memoryLimit }}
+              cpu: {{ $cpuLimit }}
+          {{- if $environment.env }}
           env:
-          {{- range $key, $value := .Values.env}}
+          {{- range $key, $value := $environment.env}}
           - name: {{ $key | quote }}
             value: {{ $value | quote }}
           {{- end }}
           {{- end }}
+---
+{{- end }}

@@ -1,16 +1,24 @@
 {{ $namespace := .Values.namespace | default "apps" }}
+{{- range $k, $environment := .Values.environments }}
+{{ $name := printf "%s--%s" $environment.name $.Values.name }}
+{{ if $environment.production }}
+{{ $name = $.Values.name }}
+{{- end }}
 apiVersion: v1
 kind: Service
 metadata:
-  name: {{ .Values.name }}
+  name: {{ $name }}
   namespace: {{ $namespace }}
   labels:
-    app.kubernetes.io/name: {{ .Values.name }}
+    app.kubernetes.io/name: {{ $name }}
+    circuit/service-name: {{ $.Values.name }}
 spec:
   selector:
-    app.kubernetes.io/name: {{ .Values.name }}
+    app.kubernetes.io/name: {{ $name }}
   ports:
     - protocol: TCP
       port: 80
       name: http
       targetPort: http
+---
+{{- end }}

@@ -1,16 +1,24 @@
 {{ $namespace := .Values.namespace | default "apps" }}
+{{- range $k, $environment := .Values.environments }}
+{{ $name := printf "%s--%s" $environment.name $.Values.name }}
+{{ if $environment.production }}
+{{ $name = $.Values.name }}
+{{- end }}
 apiVersion: autoscaling/v1
 kind: HorizontalPodAutoscaler
 metadata:
-  name: {{ .Values.name }}
+  name: {{ $name }}
   namespace: {{ $namespace }}
   labels:
-    app.kubernetes.io/name: {{ .Values.name }}
+    app.kubernetes.io/name: {{ $name }}
+    circuit/service-name: {{ $.Values.name }}
 spec:
   scaleTargetRef:
     apiVersion: apps/v1
     kind: Deployment
-    name: {{ .Values.name }}
-  minReplicas: {{ .Values.minReplicas }}
-  maxReplicas: {{ .Values.maxReplicas }}
-  targetCPUUtilizationPercentage: {{ .Values.targetCPU }}
+    name: {{ $name }}
+  minReplicas: {{ $environment.minReplicas | default $.Values.default.min }}
+  maxReplicas: {{ $environment.maxReplicas | default $.Values.default.max }}
+  targetCPUUtilizationPercentage: {{ $environment.targetCPU | default $.Values.default.target }}
+---
+{{- end }}

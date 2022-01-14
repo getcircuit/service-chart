@@ -1,11 +1,11 @@
 {{- if .Values.metrics.enabled }}
-{{ $namespace := .Values.namespace | default "apps" }}
+{{ $namespace := .Release.Namespace | default "apps" }}
 apiVersion: monitoring.coreos.com/v1
 kind: ServiceMonitor
 metadata:
   labels:
-    app.kubernetes.io/name: {{ .Values.name }}
-  name: {{ .Values.name }}
+    app.kubernetes.io/name: {{ .Chart.Name }}
+  name: {{ .Chart.Name }}
   namespace: {{ $namespace }}
 spec:
   endpoints:
@@ -16,5 +16,5 @@ spec:
       - {{ $namespace }}
   selector:
     matchLabels:
-      app.kubernetes.io/name: {{ .Values.name }}
+      app.kubernetes.io/name: {{ .Chart.Name }}
 {{- end }}

@@ -1,4 +1,0 @@
-apiVersion: v2
-name: server
-version: 0.0.2
-description: Helm chart for Circuit server definition

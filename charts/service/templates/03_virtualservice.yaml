@@ -1,17 +1,17 @@
-{{ $namespace := .Values.namespace | default "apps" }}
-{{ $svcHost := printf "%s.%s.svc.cluster.local" .Values.name $namespace }}
+{{ $namespace := .Release.Namespace | default "apps" }}
+{{ $svcHost := printf "%s.%s.svc.cluster.local" .Chart.Name $namespace }}
 apiVersion: networking.istio.io/v1alpha3
 kind: VirtualService
 metadata:
-  name: {{ .Values.name }}
+  name: {{ .Chart.Name }}
   namespace: {{ $namespace }}
   labels:
-    app.kubernetes.io/name: {{ .Values.name }}
+    app.kubernetes.io/name: {{ .Chart.Name }}
 spec:
   hosts:
   - {{ $svcHost }}
   {{- if .Values.public }}
-  - {{ printf "%s.%s.%s" .Values.name .Values.cluster .Values.host }}
+  - {{ printf "%s.%s.%s" .Chart.Name .Values.cluster .Values.host }}
   {{- end }}
   gateways:
   - mesh

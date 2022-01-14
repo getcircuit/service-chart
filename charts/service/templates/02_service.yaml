@@ -1,14 +1,14 @@
-{{ $namespace := .Values.namespace | default "apps" }}
+{{ $namespace := .Release.Namespace | default "apps" }}
 apiVersion: v1
 kind: Service
 metadata:
-  name: {{ .Values.name }}
+  name: {{ .Chart.Name }}
   namespace: {{ $namespace }}
   labels:
-    app.kubernetes.io/name: {{ .Values.name }}
+    app.kubernetes.io/name: {{ .Chart.Name }}
 spec:
   selector:
-    app.kubernetes.io/name: {{ .Values.name }}
+    app.kubernetes.io/name: {{ .Chart.Name }}
   ports:
     - protocol: TCP
       port: 80

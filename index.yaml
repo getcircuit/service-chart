@@ -9,4 +9,13 @@ entries:
     urls:
     - https://github.com/getcircuit/app-chart/releases/download/server-0.0.2/server-0.0.2.tgz
     version: 0.0.2
+  service:
+  - apiVersion: v2
+    created: "2022-01-14T01:04:42.138432056Z"
+    description: Helm chart for Circuit service definition
+    digest: d49fb1b7fba0c2477b775e319c95a6433f77087797c33f80d6a99fa96a9b0234
+    name: service
+    urls:
+    - https://github.com/getcircuit/service-chart/releases/download/service-0.0.2/service-0.0.2.tgz
+    version: 0.0.2
 generated: "2022-01-14T00:24:49.000497379Z"

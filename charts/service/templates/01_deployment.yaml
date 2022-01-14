@@ -1,3 +1,6 @@
+{{- if not .Values.name }}
+  {{ fail "You must provide a `service.name` in values.yaml" }}
+{{- end }}
 {{ $namespace := .Values.namespace | default "apps" }}
 apiVersion: apps/v1
 kind: Deployment
@@ -17,7 +20,7 @@ spec:
     spec:
       containers:
         - name: {{ .Values.name | quote }}
-          image: {{ printf "%s/%s:%s" .Values.repo .Values.name .Values.version }}
+          image: {{ printf "%s/%s:%s" .Values.repo .Values.name .Chart.version }}
           ports:
           - name: http
             containerPort: {{ .Values.port }}

@@ -1,20 +1,34 @@
-{{- if .Values.metrics.enabled }}
 {{ $namespace := .Values.namespace | default "apps" }}
+{{- /* */}}
+{{- range $k, $environment := .Values.environments }}
+{{- /* */}}
+{{- if $environment.metrics }}
+{{- if $environment.metrics.enabled }}
+{{- /* */}}
+{{ $name := printf "%s--%s" $environment.name $.Values.name }}
+{{ if $environment.production }}
+  {{ $name = $.Values.name }}
+{{- end }}
+{{- /* */}}
 apiVersion: monitoring.coreos.com/v1
 kind: ServiceMonitor
 metadata:
   labels:
-    app.kubernetes.io/name: {{ .Values.name }}
-  name: {{ .Values.name }}
+    app.kubernetes.io/name: {{ $name }}
+    circuit/service-name: {{ $.Values.name }}
+  name: {{ $name }}
   namespace: {{ $namespace }}
 spec:
   endpoints:
-    - interval: {{ .Values.metrics.interval | default "15s" }}
+    - interval: {{ $environment.metrics.interval | default $.Values.default.metricsInterval }}
       port: http
   namespaceSelector:
     matchNames:
       - {{ $namespace }}
   selector:
     matchLabels:
-      app.kubernetes.io/name: {{ .Values.name }}
+      app.kubernetes.io/name: {{ $name }}
+---
+{{- end }}
+{{- end }}
 {{- end }}

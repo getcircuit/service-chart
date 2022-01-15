@@ -23,9 +23,18 @@ metadata:
 spec:
   hosts:
   - {{ $svcHost }}
+  {{- /* */}}
   {{- $isPublic := $environment.public | default $.Values.default.public}}
   {{- if $isPublic }}
   - {{ printf "%s.%s.%s" $name $cluster $host }}
+  {{- end }}
+  {{- /* */}}
+  {{- if $environment.production }}
+  {{- /* */}}
+  {{- if $.Values.customDomain }}
+  - {{ $.Values.customDomain }}
+  {{- end }}
+  {{- /* */}}
   {{- end }}
   gateways:
   - mesh

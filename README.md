@@ -21,12 +21,13 @@ The service should be configured at `values.yaml`, here's its API:
 
 `Service`:
 
-| Field        | Description                                                       | Type          | Required | Default                                                   |
-|--------------|-------------------------------------------------------------------|---------------|----------|-----------------------------------------------------------|
-| name         | Service name                                                      | string        | true     | N/A                                                       |
-| repo         | Container image repo address (final image url will be: repo/name) | string        | false    | europe-west2-docker.pkg.dev/circuit-api-284012/getcircuit |
-| cluster      | Cluster to deploy the service to                                  | string        | false    | circuit-1                                                 |
-| environments | Service environments definition                                   | Environment[] | false    | []                                                        |
+| Field        | Description                                                                                                   | Type          | Required | Default                                                   |
+|--------------|---------------------------------------------------------------------------------------------------------------|---------------|----------|-----------------------------------------------------------|
+| name         | Service name                                                                                                  | string        | true     | N/A                                                       |
+| repo         | Container image repo address (final image url will be: repo/name)                                             | string        | false    | europe-west2-docker.pkg.dev/circuit-api-284012/getcircuit |
+| cluster      | Cluster to deploy the service to                                                                              | string        | false    | circuit-1                                                 |
+| customDomain | A custom domain that is going the server should respond (this field is not automatic, a DNS rule must be set) | string        | false    | N/A                                                       |
+| environments | Service environments definition                                                                               | Environment[] | false    | []                                                        |
 
 `Environment`:
 | Field       | Description                                                                                                                                                                                       | Type              | Required                             | Default       |
@@ -46,10 +47,10 @@ The service should be configured at `values.yaml`, here's its API:
 
 `Metrics`:
 
-| Field    | Description                                                                                                                              | Type   | Required | Default |
-|----------|------------------------------------------------------------------------------------------------------------------------------------------|--------|----------|---------|
-| enabled  | If metric scraping should be enabled. Only use this if your app [was instrumented](https://prometheus.io/docs/instrumenting/clientlibs/) | bool   | false    | false   |
-| interval | What interval the metrics should be scraped (e.g 10s)                                                                                    | string | false    | 15s     |
+| Field  | Description                           | Type   | Required | Default                            |
+|--------|---------------------------------------|--------|----------|------------------------------------|
+| enabled    | If metric scraping should be enabled. Only use this if your app [was instrumented](https://prometheus.io/docs/instrumenting/clientlibs/) | bool | false    |  false  |
+| interval | What interval the metrics should be scraped (e.g 10s)          | string | false    | 15s |
 
 
 

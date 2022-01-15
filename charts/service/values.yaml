@@ -1,6 +1,7 @@
 repo: null
 host: null
 cluster: null
+customDomain: null
 name: banana
 default:
   cpuLimit: 500m

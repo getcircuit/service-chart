@@ -27,6 +27,11 @@ spec:
   {{- if $isPublic }}
   - {{ printf "%s.%s.%s" $name $cluster $host }}
   {{- end }}
+  {{- if $environment.production }}
+  {{- if $.Values.customDomain }}
+  - {{ $.Values.customDomain }}
+  {{- end }}
+  {{- end }}
   gateways:
   - mesh
   - {{ printf "istio-system/%s" $gateway }}

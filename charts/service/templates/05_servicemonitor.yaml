@@ -22,6 +22,9 @@ spec:
   endpoints:
     - interval: {{ $environment.metrics.interval | default $.Values.default.metricsInterval }}
       port: http
+      {{- if $environment.metrics.path }}
+      path: {{ $environment.metrics.path }}
+      {{- end }}
   namespaceSelector:
     matchNames:
       - {{ $namespace }}

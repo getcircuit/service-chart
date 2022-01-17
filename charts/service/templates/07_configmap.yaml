@@ -1,0 +1,22 @@
+{{ $namespace := .Values.namespace | default "apps" }}
+{{- /* */}}
+{{- range $k, $environment := .Values.environments }}
+{{- if $environment.config }}
+{{- /* */}}
+{{- if not $environment.config.name }}
+  {{ fail "config name is required when using config"}}
+{{- end }}
+{{- /* */}}
+{{ $envName := $environment.name | default "prod" }}
+{{ $configName := printf "%s--%s--%s" $envName $.Values.name $environment.config.name }}
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ $configName }}
+data: 
+  {{ printf "%s.yaml" $environment.config.name }}: |
+{{ $environment.config.data | toYaml | indent 4}}
+---
+{{- end }}
+{{- /* */}}
+{{- end }}

@@ -32,7 +32,7 @@ The service should be configured at `values.yaml`, here's its API:
 `Environment`:
 | Field       | Description                                                                                                                                                                                       | Type              | Required                             | Default       |
 |-------------|---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|-------------------|--------------------------------------|---------------|
-| name        | Environment name (defines environment host: {{environment-name}}.{{service-name}}.{{cluster-id}}.getcircuit.io                                                                               | string            | true (if `production` is not `true`) | N/A           |
+| name        | Environment name (defines environment host: {{environment-name}}.{{service-name}}.{{cluster-id}}.getcircuit.io                                                                                    | string            | true (if `production` is not `true`) | N/A           |
 | port        | Port number the container will expose                                                                                                                                                             | number            | false                                | 8080          |
 | production  | Defines if the environment is production. Production host is {{service-name}}.{{cluster-id}}.getcircuit.io. A production environment does not require a name (its name will be the service name). | string            | false                                | circuit-1     |
 | minReplicas | Minimum number of service horizontal replicas                                                                                                                                                     | number            | false                                | 1             |
@@ -41,16 +41,31 @@ The service should be configured at `values.yaml`, here's its API:
 | targetCPU   | Average CPU usage in percentage before the autoscaler decides it needs to scale up                                                                                                                | number            | false                                | 50            |
 | public      | Defines whether a public host should be provided for the service or not                                                                                                                           | bool              | false                                | true          |
 | env         | Defines environment's env vars                                                                                                                                                                    | map[string]string | false                                | N/A           |
+| secret      | Service secret's properties                                                                                                                                                                       | Secret            | false                                | N/A           |
+| config      | Service config's properties                                                                                                                                                                       | Config            | false                                | N/A           |
 | resources   | Defines environment's resources                                                                                                                                                                   | Resources         | false                                | See Resources |
 | metrics     | Defines metric scraping                                                                                                                                                                           | Metrics           | false                                | N/A           |
 
+`Secret`: 
+
+| Field   | Description                                                                                                                                                    | Type   | Required | Default |
+|---------|----------------------------------------------------------------------------------------------------------------------------------------------------------------|--------|----------|---------|
+| name    | Name of the secret that will be fetched from Google Cloud's Secret Manager (the secret will be available for the service at path: /etc/secret/{{secret-name}}) | Secret | true     | N/A     |
+| version | Version of the secret that will be fetched from Google Cloud's Secret Manager                                                                                  | Secret | false    | '1'     |
+
+`Config`: 
+
+| Field | Description                                                                                                                 | Type   | Required | Default |
+|-------|-----------------------------------------------------------------------------------------------------------------------------|--------|----------|---------|
+| name  | Name of the config will be created (the config will be available for the service at path: /etc/config/{{config-name.yaml}}) | Secret | true     | N/A     |
+| data  | Config yaml                                                                                                                 | map    | true     | N/A     |
 
 `Metrics`:
 
-| Field  | Description                           | Type   | Required | Default                            |
-|--------|---------------------------------------|--------|----------|------------------------------------|
-| enabled    | If metric scraping should be enabled. Only use this if your app [was instrumented](https://prometheus.io/docs/instrumenting/clientlibs/) | bool | false    |  false  |
-| interval | What interval the metrics should be scraped (e.g 10s)          | string | false    | 15s |
+| Field    | Description                                                                                                                              | Type   | Required | Default |
+|----------|------------------------------------------------------------------------------------------------------------------------------------------|--------|----------|---------|
+| enabled  | If metric scraping should be enabled. Only use this if your app [was instrumented](https://prometheus.io/docs/instrumenting/clientlibs/) | bool   | false    | false   |
+| interval | What interval the metrics should be scraped (e.g 10s)                                                                                    | string | false    | 15s     |
 
 
 

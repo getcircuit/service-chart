@@ -2,7 +2,8 @@ repo: null
 host: null
 cluster: null
 customDomain: null
-name: banana
+name: null
+imageName: null
 default:
   cpuLimit: 500m
   memoryLimit: 512Mi
@@ -18,4 +19,7 @@ default:
   namespace: apps
   public: true
   metricsInterval: 15s
+  projectId: '649859665426'
 environments:
+- name: staging
+- production: true

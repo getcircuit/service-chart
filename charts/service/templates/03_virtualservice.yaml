@@ -29,16 +29,14 @@ spec:
   - {{ printf "%s.%s.%s" $name $cluster $host }}
   {{- end }}
   {{- /* */}}
-  {{- if $environment.production }}
-  {{- /* */}}
-  {{- if $.Values.customDomain }}
-  - {{ $.Values.customDomain }}
+  {{- if $environment.customDomain }}
+  - {{ $environment.customDomain }}
   {{- end }}
   {{- /* */}}
-  {{- end }}
   gateways:
   - mesh
-  - {{ printf "istio-system/%s" $gateway }}
+  - {{ "istio-system/public" }}
+  - {{ "istio-system/public-com" }}
   http:
   - route:
     - destination:

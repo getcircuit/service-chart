@@ -18,4 +18,7 @@ default:
   namespace: apps
   public: true
   metricsInterval: 15s
+  projectId: '649859665426'
 environments:
+- name: staging
+- production: true

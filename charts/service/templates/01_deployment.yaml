@@ -63,8 +63,9 @@ spec:
         circuit/service-name: {{ $.Values.name }}
     spec:
       containers:
-        - name: {{ $name }}
-          image: {{ printf "%s/%s:%s" $repo $.Values.name $version }}
+        - name: {{ $name }}]
+          {{ $imageName := $.Values.imageName | default $.Values.name }}
+          image: {{ printf "%s/%s:%s" $repo $imageName $version }}
           ports:
           - name: http
             containerPort: {{ $environment.port | default $.Values.default.port }}
@@ -72,18 +73,56 @@ spec:
           resources: 
             {{- if $requestedCpu }}
             requests:
-              memory: {{ $requestedCpu }}
-              cpu: {{ $requestedMemory }}
+              cpu: {{ $requestedCpu }}
+              memory: {{ $requestedMemory }}
             {{- end }}
             limits:
-              memory: {{ $memoryLimit }}
               cpu: {{ $cpuLimit }}
+              memory: {{ $memoryLimit }}
           {{- if $environment.env }}
+          {{- /* */}}
           env:
           {{- range $key, $value := $environment.env}}
           - name: {{ $key | quote }}
             value: {{ $value | quote }}
           {{- end }}
+          {{- /* */}}
           {{- end }}
+      {{- if or $environment.secret $environment.config }}
+          volumeMounts:
+          {{- if $environment.config }}
+          - mountPath: /etc/config
+            readOnly: true
+            name: config
+          {{- end }}
+          {{- if $environment.secret }}
+          - mountPath: /etc/secret
+            readOnly: true
+            name: secret
+          {{- end }}
+      volumes:
+      {{- $envName := $environment.name | default "prod" }}
+      {{- /* */}}
+      {{- if $environment.secret }}
+      {{- $secretName := printf "%s--%s--%s" $envName $.Values.name $environment.secret.name }}
+      - name: secret
+        secret:
+          secretName: {{ $secretName }}
+          items:
+          - key: {{ $environment.secret.name }} 
+            path: {{ $environment.secret.name }}
+      {{- end }}
+      {{- /* */}}
+      {{- if $environment.config }}
+      {{- $configName := printf "%s--%s--%s" $envName $.Values.name $environment.config.name }}
+      - name: config
+        configMap:
+          name: {{ $configName }}
+          items:
+            - key: {{ printf "%s.yaml" $environment.config.name }} 
+              path: {{ printf "%s.yaml" $environment.config.name }} 
+      {{- end }}
+      {{- /* */}}
+      {{- end }}
 ---
 {{- end }}

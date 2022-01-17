@@ -31,8 +31,8 @@ spec:
   {{- /* */}}
   {{- if $environment.production }}
   {{- /* */}}
-  {{- if $.Values.customDomain }}
-  - {{ $.Values.customDomain }}
+  {{- if $environment.customDomain }}
+  - {{ $environment.customDomain }}
   {{- end }}
   {{- /* */}}
   {{- end }}

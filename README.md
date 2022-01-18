@@ -19,7 +19,7 @@ dependencies:
 
 The service should be configured at `values.yaml`, here's its API:
 
-`Service`:
+### `Service`
 
 | Field        | Description                                                                                                   | Type          | Required | Default                                                   |
 |--------------|---------------------------------------------------------------------------------------------------------------|---------------|----------|-----------------------------------------------------------|
@@ -29,7 +29,8 @@ The service should be configured at `values.yaml`, here's its API:
 | cluster      | Cluster to deploy the service to                                                                              | string        | false    | circuit-1                                                 |
 | environments | Service environments definition                                                                               | Environment[] | false    | []                                                        |
 
-`Environment`:
+### `Environment`
+
 | Field        | Description                                                                                                                                                                                       | Type              | Required                             | Default       |
 |--------------|---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|-------------------|--------------------------------------|---------------|
 | name         | Environment name (defines environment host: {{environment-name}}.{{service-name}}.{{cluster-id}}.getcircuit.io                                                                                    | string            | true (if `production` is not `true`) | N/A           |
@@ -47,37 +48,35 @@ The service should be configured at `values.yaml`, here's its API:
 | metrics      | Defines metric scraping                                                                                                                                                                           | Metrics           | false                                | N/A           |
 | customDomain | A custom domain that is going the server should respond (this field is not automatic, a DNS rule must be set)                                                                                     | string            | false                                | N/A           |
 
-`Secret`: 
+### `Secret`
 
 | Field   | Description                                                                                                                                                    | Type   | Required | Default |
 |---------|----------------------------------------------------------------------------------------------------------------------------------------------------------------|--------|----------|---------|
 | name    | Name of the secret that will be fetched from Google Cloud's Secret Manager (the secret will be available for the service at path: /etc/secret/{{secret-name}}) | Secret | true     | N/A     |
 | version | Version of the secret that will be fetched from Google Cloud's Secret Manager                                                                                  | Secret | false    | '1'     |
 
-`Config`: 
+### `Config`
 
 | Field | Description                                                                                                                 | Type   | Required | Default |
 |-------|-----------------------------------------------------------------------------------------------------------------------------|--------|----------|---------|
 | name  | Name of the config will be created (the config will be available for the service at path: /etc/config/{{config-name.yaml}}) | Secret | true     | N/A     |
 | data  | Config yaml                                                                                                                 | map    | true     | N/A     |
 
-`Metrics`:
+### `Metrics`
 
 | Field    | Description                                                                                                                              | Type   | Required | Default |
 |----------|------------------------------------------------------------------------------------------------------------------------------------------|--------|----------|---------|
 | enabled  | If metric scraping should be enabled. Only use this if your app [was instrumented](https://prometheus.io/docs/instrumenting/clientlibs/) | bool   | false    | false   |
 | interval | What interval the metrics should be scraped (e.g 10s)                                                                                    | string | false    | 15s     |
 
-
-
-`Resources`:
+### `Resources`
 
 | Field    | Description                                                                 | Type     | Required | Default      |
 |----------|-----------------------------------------------------------------------------|----------|----------|--------------|
 | requests | Defines the minimum resources that the environment requires to properly run | Resource | false    | See Resource |
 | limits   | Defines the service's node usage limits                                     | Resource | false    | See Resource |
 
-`Resource`:
+### `Resource`
 
 | Field  | Description                           | Type   | Required | Default                            |
 |--------|---------------------------------------|--------|----------|------------------------------------|

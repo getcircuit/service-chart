@@ -2,7 +2,7 @@ repo: null
 host: null
 cluster: null
 customDomain: null
-name: null
+name: rollout-test
 imageName: null
 default:
   cpuLimit: 500m
@@ -20,6 +20,10 @@ default:
   public: true
   metricsInterval: 15s
   projectId: '649859665426'
+rolloutStrategy:
+- setWeight: 5
+- pause: {}
 environments:
-- name: staging
 - production: true
+  metrics:
+    enabled: true

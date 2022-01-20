@@ -21,13 +21,14 @@ The service should be configured at `values.yaml`, here's its API:
 
 ### `Service`
 
-| Field        | Description                                                                                                   | Type          | Required | Default                                                   |
-|--------------|---------------------------------------------------------------------------------------------------------------|---------------|----------|-----------------------------------------------------------|
-| name         | Service name                                                                                                  | string        | true     | N/A                                                       |
-| repo         | Container image repo address (final image url will be: repo/name)                                             | string        | false    | europe-west2-docker.pkg.dev/circuit-api-284012/getcircuit |
-| imageName    | Overrides default image name (service name)                                                                   | string        | false    | N/A                                                       |
-| cluster      | Cluster to deploy the service to                                                                              | string        | false    | circuit-1                                                 |
-| environments | Service environments definition                                                                               | Environment[] | false    | []                                                        |
+| Field           | Description                                                                                    | Type                    | Required | Default                                                   |
+|-----------------|------------------------------------------------------------------------------------------------|-------------------------|----------|-----------------------------------------------------------|
+| name            | Service name                                                                                   | string                  | true     | N/A                                                       |
+| repo            | Container image repo address (final image url will be: repo/name)                              | string                  | false    | europe-west2-docker.pkg.dev/circuit-api-284012/getcircuit |
+| imageName       | Overrides default image name (service name)                                                    | string                  | false    | N/A                                                       |
+| rolloutStrategy | Defines custom [rollout strategy steps](https://argoproj.github.io/argo-rollouts/features/canary/) | See link in description | false    | Every 30s increase 1/5/10/25/50/75/100                    |
+| cluster         | Cluster to deploy the service to                                                               | string                  | false    | circuit-1                                                 |
+| environments    | Service environments definition                                                                | Environment[]           | false    | []                                                        |
 
 ### `Environment`
 

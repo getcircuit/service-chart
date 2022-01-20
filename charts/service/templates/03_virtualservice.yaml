@@ -40,8 +40,14 @@ spec:
   http:
   - route:
     - destination:
-        host: {{ $svcHost }}
+        host: {{ printf "%s-stable" $name }}
         port:
           number: 80
+      weight: 100
+    - destination:
+        host: {{ printf "%s-canary" $name }}
+        port:
+          number: 80
+      weight: 0
 ---
 {{- end }}

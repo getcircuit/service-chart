@@ -44,8 +44,8 @@
   {{ $name = $.Values.name }}
 {{- end }}
 {{- /* */}}
-apiVersion: apps/v1
-kind: Deployment
+apiVersion: argoproj.io/v1alpha1
+kind: Rollout
 metadata:
   name: {{ $name }}
   namespace: {{ $namespace }}
@@ -53,6 +53,41 @@ metadata:
     app.kubernetes.io/name: {{ $name }}
     circuit/service-name: {{ $.Values.name }}
 spec:
+  strategy:
+    canary:
+      canaryService: {{ printf "%s-canary" $name }}
+      stableService: {{ printf "%s-stable" $name }}
+      trafficRouting:
+        istio:
+          virtualServices:
+          - name: {{ $name }}
+      steps:
+      {{- if $.Values.rolloutStrategy}}
+{{ $.Values.rolloutStrategy | toYaml | indent 6}}
+      {{- else }}
+      - setWeight: 1
+      - pause: 
+          duration: 30s
+      - setWeight: 5
+      - pause: 
+          duration: 30s
+      - setWeight: 10
+      - pause: 
+          duration: 30s
+      - setWeight: 25
+      - pause: 
+          duration: 30s
+      - setWeight: 50
+      - pause: 
+          duration: 30s
+      - setWeight: 75
+      - pause: 
+          duration: 30s
+      - setWeight: 100
+      - pause: 
+          duration: 30s
+      {{- end }}
+  revisionHistoryLimit: 2
   selector:
     matchLabels:
       app.kubernetes.io/name: {{ $name }}
@@ -60,11 +95,11 @@ spec:
     metadata:
       labels:
         app.kubernetes.io/name: {{ $name }}
-        circuit/service-name: {{ $.Values.name }}
+        istio-injection: enabled
     spec:
       containers:
         - name: {{ $name }}
-          {{ $imageName := $.Values.imageName | default $.Values.name }}
+          {{- $imageName := $.Values.imageName | default $.Values.name }}
           image: {{ printf "%s/%s:%s" $repo $imageName $version }}
           ports:
           - name: http

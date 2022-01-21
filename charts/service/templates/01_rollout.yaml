@@ -62,8 +62,8 @@ spec:
           virtualServices:
           - name: {{ $name }}
       steps:
-      {{- if $.Values.rolloutStrategy}}
-{{ $.Values.rolloutStrategy | toYaml | indent 6}}
+      {{- if $environment.rolloutStrategy}}
+{{ $environment.rolloutStrategy | toYaml | indent 6}}
       {{- else }}
       - setWeight: 1
       - pause: 

@@ -49,5 +49,15 @@ spec:
         port:
           number: 80
       weight: 0
+    {{- if $.Values.mirror }}
+    {{- if $.Values.mirror.enabled }}
+    {{- if $environment.production }}
+    mirror:
+      host: {{ printf "%s--%s-stable" $.Values.mirror.environment $.Values.name }}
+    mirrorPercentage:
+      value: {{ $.Values.mirror.percentage }}
+    {{- end }}
+    {{- end }}
+    {{- end }}
 ---
 {{- end }}

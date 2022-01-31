@@ -2,7 +2,7 @@ repo: null
 host: null
 cluster: null
 customDomain: null
-name: rollout-test
+name: null
 imageName: null
 default:
   cpuLimit: 500m
@@ -27,3 +27,5 @@ environments:
 - production: true
   metrics:
     enabled: true
+mirror:
+  enabled: false

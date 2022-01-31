@@ -68,24 +68,34 @@ spec:
       - setWeight: 1
       - pause: 
           duration: 30s
+      - setWeight: 2
+      - pause: 
+          duration: 30s
+      - setWeight: 3
+      - pause: 
+          duration: 30s
       - setWeight: 5
       - pause: 
           duration: 30s
-      - setWeight: 10
+      - setWeight: 8
       - pause: 
           duration: 30s
-      - setWeight: 25
+      - setWeight: 13
       - pause: 
           duration: 30s
-      - setWeight: 50
+      - setWeight: 21
       - pause: 
           duration: 30s
-      - setWeight: 75
+      - setWeight: 34
+      - pause: 
+          duration: 30s
+      - setWeight: 55
+      - pause: 
+          duration: 30s
+      - setWeight: 89
       - pause: 
           duration: 30s
       - setWeight: 100
-      - pause: 
-          duration: 30s
       {{- end }}
   revisionHistoryLimit: 2
   selector:

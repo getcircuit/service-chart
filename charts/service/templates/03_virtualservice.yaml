@@ -10,7 +10,7 @@
   {{ $name = $.Values.name }}
 {{- end }}
 {{- /* */}}
-{{ $svcHost := printf "%s.%s.svc.cluster.local" $name $namespace }}
+{{ $svcHost := printf "%s.local" $name }}
 {{- /* */}}
 apiVersion: networking.istio.io/v1alpha3
 kind: VirtualService

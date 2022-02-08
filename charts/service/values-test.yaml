@@ -2,3 +2,5 @@ name: service-template
 environments:
 - name: staging
 - production: true
+  healthcheck:
+    enabled: true

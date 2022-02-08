@@ -20,6 +20,19 @@ default:
   public: true
   metricsInterval: 15s
   projectId: '649859665426'
+  healthcheck:
+    liveness:
+      path: /health
+      delay: 20
+      interval: 10
+      failure: 3
+      timeout: 30
+    readiness:
+      path: /health
+      delay: 10
+      interval: 10
+      failure: 3
+      timeout: 30
 rolloutStrategy:
 - setWeight: 5
 - pause: {}

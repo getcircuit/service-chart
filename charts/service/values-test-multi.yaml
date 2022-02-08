@@ -1,56 +1,55 @@
-service:
-  name: service-template
-  environments:
-  - env:
-      TEST_ENV: Example env var
-    metrics:
-      enabled: true
-      interval: 10s
-    minReplicas: 1
-    maxReplicas: 5
-    port: 3000
-    production: true
-    version: v0.0.2
-    targetCPU: 80
-    public: true
-    healthcheck:
-      enabled: true
-      liveness:
-        path: /health
-        delay: 20
-        interval: 10
-        failure: 3
-        timeout: 30
-      readiness:
-        path: /health
-        delay: 10
-        interval: 10
-        failure: 3
-        timeout: 30
-    resources:
-      requests:
-        cpu: 500m
-        memory: 512Mi
-      limits: 
-        cpu: 1
-        memory: 1Gi
-  - env:
-      TEST_ENV: Staging env var
-    metrics:
-      enabled: true
-      interval: 60s
-    minReplicas: 1
-    maxReplicas: 5
-    port: 3000
-    production: false
-    name: staging
-    version: v0.0.2
-    targetCPU: 95
-    public: true
-    resources:
-      requests:
-        cpu: 200m
-        memory: 64Mi
-      limits: 
-        cpu: 500m
-        memory: 256Mi
+name: service-template
+environments:
+- env:
+    TEST_ENV: Example env var
+  metrics:
+    enabled: true
+    interval: 10s
+  minReplicas: 1
+  maxReplicas: 5
+  port: 3000
+  production: true
+  version: v0.0.2
+  targetCPU: 80
+  public: true
+  healthcheck:
+    enabled: true
+    liveness:
+      path: /health
+      delay: 20
+      interval: 10
+      failure: 3
+      timeout: 30
+    readiness:
+      path: /health
+      delay: 10
+      interval: 10
+      failure: 3
+      timeout: 30
+  resources:
+    requests:
+      cpu: 500m
+      memory: 512Mi
+    limits: 
+      cpu: 1
+      memory: 1Gi
+- env:
+    TEST_ENV: Staging env var
+  metrics:
+    enabled: true
+    interval: 60s
+  minReplicas: 1
+  maxReplicas: 5
+  port: 3000
+  production: false
+  name: staging
+  version: v0.0.2
+  targetCPU: 95
+  public: true
+  resources:
+    requests:
+      cpu: 200m
+      memory: 64Mi
+    limits: 
+      cpu: 500m
+      memory: 256Mi

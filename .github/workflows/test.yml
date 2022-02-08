@@ -23,4 +23,4 @@ jobs:
       - name: Setup Helm
         run: sudo snap install helm --classic
       - name: Template service chart
-        run: cd charts/service && helm template test ./ -f values-test.yaml
+        run: cd charts/service && helm template test ./ -f values-test-multi.yaml

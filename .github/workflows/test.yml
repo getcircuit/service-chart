@@ -4,13 +4,23 @@ on:
   pull_request: {}
 
 jobs:
-  service-template:
-    name: Template the service chart with minimal values
+  service-minimal-template:
+    name: Build with minimal values
     runs-on: ubuntu-latest
     steps:
       - name: Checkout Repo
         uses: actions/checkout@v2
       - name: Setup Helm
-        run: snap install helm --classic
+        run: sudo snap install helm --classic
+      - name: Template service chart
+        run: cd charts/service && helm template test ./ -f values-test.yaml
+  service-multi-template:
+    name: Build with multiple environments
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Repo
+        uses: actions/checkout@v2
+      - name: Setup Helm
+        run: sudo snap install helm --classic
       - name: Template service chart
         run: cd charts/service && helm template test ./ -f values-test.yaml

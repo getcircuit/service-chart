@@ -13,6 +13,20 @@ service:
     version: v0.0.2
     targetCPU: 80
     public: true
+    healthcheck:
+      enabled: true
+      liveness:
+        path: /health
+        delay: 20
+        interval: 10
+        failure: 3
+        timeout: 30
+      readiness:
+        path: /health
+        delay: 10
+        interval: 10
+        failure: 3
+        timeout: 30
     resources:
       requests:
         cpu: 500m

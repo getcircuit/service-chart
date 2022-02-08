@@ -130,7 +130,7 @@ spec:
             httpGet:
               path: {{ ($environment.healthcheck.liveness).path | default $.Values.default.healthcheck.liveness.path }}
               port: http
-            initialDelaySeconds: {{ ($environment.healthcheck.liveness).delay | default $.Values.default.healthcheck.liveness.path }}
+            initialDelaySeconds: {{ ($environment.healthcheck.liveness).delay | default $.Values.default.healthcheck.liveness.delay }}
             periodSeconds: {{ ($environment.healthcheck.liveness).interval | default $.Values.default.healthcheck.liveness.interval }}
             failureThreshold: {{ ($environment.healthcheck.liveness).failure | default $.Values.default.healthcheck.liveness.failure }}
             timeoutSeconds: {{ ($environment.healthcheck.liveness).timeout | default $.Values.default.healthcheck.liveness.timeout }}
@@ -138,7 +138,7 @@ spec:
             httpGet:
               path: {{ ($environment.healthcheck.readiness).path | default $.Values.default.healthcheck.readiness.path }}
               port: http
-            initialDelaySeconds: {{ ($environment.healthcheck.readiness).delay | default $.Values.default.healthcheck.readiness.path }}
+            initialDelaySeconds: {{ ($environment.healthcheck.readiness).delay | default $.Values.default.healthcheck.readiness.delay }}
             periodSeconds: {{ ($environment.healthcheck.readiness).interval | default $.Values.default.healthcheck.readiness.interval }}
             failureThreshold: {{ ($environment.healthcheck.readiness).failure | default $.Values.default.healthcheck.readiness.failure }}
             timeoutSeconds: {{ ($environment.healthcheck.readiness).timeout | default $.Values.default.healthcheck.readiness.timeout }}

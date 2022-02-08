@@ -144,7 +144,6 @@ spec:
             timeoutSeconds: {{ $environment.healthcheck.readiness.timeout | default $.Values.default.healthcheck.readiness.timeout }}
           {{- end }}
           {{- end }}
-          {{- end }}
           {{- if $environment.env }}
           {{- /* */}}
           env:

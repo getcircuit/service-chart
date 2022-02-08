@@ -1,0 +1,4 @@
+name: service-template
+environments:
+- name: staging
+- production: true

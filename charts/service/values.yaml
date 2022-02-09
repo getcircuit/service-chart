@@ -18,7 +18,7 @@ default:
   version: latest
   namespace: apps
   public: true
-  metricsInterval: 15s
+  metricsInterval: 30s
   projectId: '649859665426'
   healthcheck:
     liveness:

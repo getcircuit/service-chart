@@ -1,4 +1,4 @@
 apiVersion: v2
 name: service
-version: 1.5.3
+version: 1.5.4
 description: Helm chart for Circuit service definition

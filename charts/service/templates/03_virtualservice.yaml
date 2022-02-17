@@ -38,7 +38,11 @@ spec:
   - {{ "istio-system/public" }}
   - {{ "istio-system/public-com" }}
   http:
-  - route:
+  {{- if $environment.customRoute }}
+{{ $environment.customRoute | toYaml | indent 2}}
+  {{- end }}
+  - name: primary
+    route:
     - destination:
         host: {{ printf "%s-stable" $name }}
         port:

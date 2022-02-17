@@ -12,6 +12,14 @@ environments:
   version: v0.0.2
   targetCPU: 80
   public: true
+  customRoute:
+  - name: route-to-ms
+    match:
+    - uri:
+        prefix: "/my-ms"
+    route:
+    - destination:
+        host: my-ms
   healthcheck:
     enabled: true
     liveness:

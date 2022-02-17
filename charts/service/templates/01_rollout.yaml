@@ -61,6 +61,8 @@ spec:
         istio:
           virtualServices:
           - name: {{ $name }}
+            routes:
+            - primary
       steps:
       {{- if $environment.rolloutStrategy}}
 {{ $environment.rolloutStrategy | toYaml | indent 6}}

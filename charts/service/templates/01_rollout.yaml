@@ -111,6 +111,7 @@ spec:
       annotations:
         cluster-autoscaler.kubernetes.io/safe-to-evict: "true"
     spec:
+      serviceAccountName: apps-sa
       containers:
         - name: {{ $name }}
           {{- $imageName := $.Values.imageName | default $.Values.name }}

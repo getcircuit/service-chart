@@ -21,6 +21,7 @@ metadata:
     app.kubernetes.io/name: {{ $name }}
     circuit/service-name: {{ $.Values.name }}
 spec:
+{{- if not $environment.delegatedService }}
   hosts:
   - {{ $svcHost }}
   {{- /* */}}
@@ -37,6 +38,7 @@ spec:
   - mesh
   - {{ "istio-system/public" }}
   - {{ "istio-system/public-com" }}
+{{- end }}
   http:
   {{- if $environment.customRoute }}
 {{ $environment.customRoute | toYaml | indent 2}}

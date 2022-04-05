@@ -63,6 +63,16 @@ spec:
           - name: {{ $name }}
             routes:
             - primary
+      {{- if $environment.rolloutAnalysis }}
+      analysis:
+        templates:
+        - templateName: success-rate
+        args:
+        - name: service-name
+          value: {{ printf "%s-canary" $name }}
+        - name: success-condition
+          value: "{{ $environment.rolloutAnalysis.successCondition }}"
+      {{- end }}
       steps:
       {{- if $environment.rolloutStrategy}}
 {{ $environment.rolloutStrategy | toYaml | indent 6}}
@@ -70,31 +80,16 @@ spec:
       - setWeight: 1
       - pause: 
           duration: 30s
-      - setWeight: 2
-      - pause: 
-          duration: 30s
-      - setWeight: 3
-      - pause: 
-          duration: 30s
       - setWeight: 5
       - pause: 
           duration: 30s
-      - setWeight: 8
+      - setWeight: 10
       - pause: 
           duration: 30s
-      - setWeight: 13
+      - setWeight: 20
       - pause: 
           duration: 30s
-      - setWeight: 21
-      - pause: 
-          duration: 30s
-      - setWeight: 34
-      - pause: 
-          duration: 30s
-      - setWeight: 55
-      - pause: 
-          duration: 30s
-      - setWeight: 89
+      - setWeight: 50
       - pause: 
           duration: 30s
       - setWeight: 100

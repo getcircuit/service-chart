@@ -12,6 +12,8 @@ environments:
   version: v0.0.2
   targetCPU: 80
   public: true
+  rolloutAnalysis:
+    successCondition: 0.99
   customRoute:
   - name: route-to-ms
     match:

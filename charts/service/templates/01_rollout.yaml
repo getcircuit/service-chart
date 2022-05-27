@@ -154,7 +154,7 @@ spec:
           {{- end }}
           {{- /* */}}
           {{- end }}
-      {{- if or $environment.secret $environment.config }}
+      {{- if or $environment.secret $environment.config $environment.secrets }}
           volumeMounts:
           {{- if $environment.config }}
           - mountPath: /etc/config
@@ -165,6 +165,13 @@ spec:
           - mountPath: /etc/secret
             readOnly: true
             name: secret
+          {{- end }}
+          {{- if $environment.secrets }}
+          {{- range $i, $secret := $environment.secrets }}
+          - mountPath: {{ $secret.path }}
+            readOnly: true
+            name: {{ $secret.name }}
+          {{- end }}
           {{- end }}
       volumes:
       {{- $envName := $environment.name | default "prod" }}
@@ -187,6 +194,19 @@ spec:
           items:
             - key: {{ printf "%s.yaml" $environment.config.name }} 
               path: {{ printf "%s.yaml" $environment.config.name }} 
+      {{- end }}
+      {{- /* */}}
+      {{- if $environment.secrets }}
+      {{- range $i, $secret := $environment.secrets }}
+      - name: {{ $secret.name }}
+        secret:
+          secretName: {{ $secret.name }}
+          items:
+          {{- range $j, $item := $secret.items }}
+          - key: {{ $item }}
+            path: {{ $item }}
+          {{- end }}
+      {{- end }}
       {{- end }}
       {{- /* */}}
       {{- end }}

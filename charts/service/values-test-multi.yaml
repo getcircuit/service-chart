@@ -12,6 +12,10 @@ environments:
   version: v0.0.2
   targetCPU: 80
   public: true
+  secrets:
+  - name: firestore-service-accounts
+    path: /etc/secrets
+    items: [api.json, consumer.json dev.json, teams.json, test.json]
   rolloutAnalysis:
     successCondition: 0.99
   customRoute:
@@ -56,6 +60,10 @@ environments:
   version: v0.0.2
   targetCPU: 95
   public: true
+  secrets:
+  - name: firestore-service-accounts
+    path: /etc/secrets
+    items: [api.json, consumer.json dev.json, teams.json, test.json]
   resources:
     requests:
       cpu: 200m

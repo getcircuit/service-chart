@@ -135,6 +135,7 @@ spec:
             periodSeconds: {{ ($environment.healthcheck.liveness).interval | default $.Values.default.healthcheck.liveness.interval }}
             failureThreshold: {{ ($environment.healthcheck.liveness).failure | default $.Values.default.healthcheck.liveness.failure }}
             timeoutSeconds: {{ ($environment.healthcheck.liveness).timeout | default $.Values.default.healthcheck.liveness.timeout }}
+            successThreshold: {{ ($environment.healthcheck.liveness).success | default $.Values.default.healthcheck.liveness.success }}
           readinessProbe:
             httpGet:
               path: {{ ($environment.healthcheck.readiness).path | default $.Values.default.healthcheck.readiness.path }}
@@ -143,6 +144,7 @@ spec:
             periodSeconds: {{ ($environment.healthcheck.readiness).interval | default $.Values.default.healthcheck.readiness.interval }}
             failureThreshold: {{ ($environment.healthcheck.readiness).failure | default $.Values.default.healthcheck.readiness.failure }}
             timeoutSeconds: {{ ($environment.healthcheck.readiness).timeout | default $.Values.default.healthcheck.readiness.timeout }}
+            successThreshold: {{ ($environment.healthcheck.readiness).success | default $.Values.default.healthcheck.readiness.success }}
           {{- end }}
           {{- end }}
           {{- if $environment.env }}

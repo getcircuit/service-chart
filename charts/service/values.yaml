@@ -27,12 +27,14 @@ default:
       interval: 10
       failure: 3
       timeout: 30
+      success: 1
     readiness:
       path: /health
       delay: 10
       interval: 10
       failure: 3
       timeout: 30
+      success: 1
 rolloutStrategy:
 - setWeight: 5
 - pause: {}

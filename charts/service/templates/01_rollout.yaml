@@ -116,6 +116,12 @@ spec:
           - name: http
             containerPort: {{ $environment.port | default $.Values.default.port }}
           imagePullPolicy: IfNotPresent
+          {{- if $environment.command }}
+          command:
+          {{- range $key, $part := $environment.command }}
+          - {{ $part }}
+          {{- end }}
+          {{- end }}
           resources: 
             {{- if $requestedCpu }}
             requests:

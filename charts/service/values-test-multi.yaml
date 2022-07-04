@@ -58,6 +58,7 @@ environments:
   port: 3000
   production: false
   name: staging
+  command: ["my", "custom", "command"]
   version: v0.0.2
   targetCPU: 95
   public: true

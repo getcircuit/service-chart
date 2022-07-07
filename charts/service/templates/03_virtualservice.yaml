@@ -30,9 +30,6 @@ spec:
   - {{ printf "%s.%s.%s" $name $cluster $host }}
   {{- end }}
   {{- /* */}}
-  {{- if $environment.customDomain }}
-  - {{ $environment.customDomain }}
-  {{- end }}
   {{- if $environment.customDomains }}
   {{- range $k, $domain := $environment.customDomains }}
   - {{ $domain }}

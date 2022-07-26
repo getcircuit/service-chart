@@ -43,9 +43,13 @@ spec:
 {{- end }}
   http:
   {{- if $environment.customRoute }}
-{{ $environment.customRoute | toYaml | indent 2}}
+{{ $environment.customRoute | toYaml | indent 2 }}
   {{- end }}
   - name: primary
+    {{- if $environment.customMatch }}
+    match:
+{{ $environment.customMatch | toYaml | indent 4 }}
+    {{- end }}
     route:
     - destination:
         host: {{ printf "%s-stable" $name }}

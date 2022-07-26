@@ -12,6 +12,11 @@ environments:
   customDomains:
   - api.getcircuit.com
   - api-test.getcircuit.com
+  customMatch:
+  - uri:
+      prefix: "/rest"
+  - uri:
+      prefix: "/health"
   version: v0.0.2
   targetCPU: 80
   public: true

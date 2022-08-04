@@ -2,6 +2,8 @@ name: service-template
 environments:
 - env:
     TEST_ENV: Example env var
+    A_SECRET_VALUE: ${gcp:staging--secret--value/1}
+    ANOTHER_SECRET_VALUE: ${gcp:very--secret/1}
   metrics:
     enabled: true
     interval: 10s
@@ -20,10 +22,25 @@ environments:
   version: v0.0.2
   targetCPU: 80
   public: true
-  secrets:
-  - name: firestore-service-accounts
-    path: /etc/secrets
-    items: [api.json, consumer.json dev.json, teams.json, test.json]
+  volumes:
+    secrets:
+    - name: firestore-service-accounts
+      path: /etc/secrets
+      items: 
+        - key: "api.json"
+          path: "api.json"
+        - key: "consumer.json"
+          path: "consumer.json"
+        - key: "dev.json"
+          path: "dev.json"
+        - key: "teams.json"
+          path: "teams.json"
+        - key: "test.json"
+          path: "test.json"
+    - from: ${gcp:mounted--secret/1}
+      path: /etc/secret
+      file: 'asdf.json'
+      name: mounted-secret
   rolloutAnalysis:
     successCondition: 0.99
   customRoute:

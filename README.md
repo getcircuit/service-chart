@@ -43,18 +43,45 @@ The service should be configured at `values.yaml`, here's its API:
 | public          | Defines whether a public host should be provided for the service or not                                                                                                                                                                       | bool                    | false                                | true                                   |
 | env             | Defines environment's env vars                                                                                                                                                                                                                | map[string]string       | false                                | N/A                                    |
 | secret          | Service secret's properties                                                                                                                                                                                                                   | Secret                  | false                                | N/A                                    |
+| volumes         | Volumes properties                                                                                                                                                                                                                            | Volume                  | false                                | N/A                                    |
 | config          | Service config's properties                                                                                                                                                                                                                   | Config                  | false                                | N/A                                    |
 | resources       | Defines environment's resources                                                                                                                                                                                                               | Resources               | false                                | See Resources                          |
 | metrics         | Defines metric scraping                                                                                                                                                                                                                       | Metrics                 | false                                | N/A                                    |
 | customDomain    | A custom domain that is going the server should respond (this field is not automatic, a DNS rule must be set)                                                                                                                                 | string                  | false                                | N/A                                    |
 | rolloutStrategy | Defines custom [rollout strategy steps](https://argoproj.github.io/argo-rollouts/features/canary/)                                                                                                                                            | See link in description | false                                | Every 30s increase 1/5/10/25/50/75/100 |
 
+### `Volume`
+
+| Field   | Description                                            | Type   | Required | Default |
+| ------- | ------------------------------------------------------ | ------ | -------- | ------- |
+| secrets | List of secrets to me mounted as a volume on the image | Secret | false    | N/A     |
+
 ### `Secret`
 
-| Field   | Description                                                                                                                                                    | Type   | Required | Default |
-|---------|----------------------------------------------------------------------------------------------------------------------------------------------------------------|--------|----------|---------|
-| name    | Name of the secret that will be fetched from Google Cloud's Secret Manager (the secret will be available for the service at path: /etc/secret/{{secret-name}}) | Secret | true     | N/A     |
-| version | Version of the secret that will be fetched from Google Cloud's Secret Manager                                                                                  | Secret | false    | '1'     |
+Either:
+
+| Field | Description                                          | Type        | Required | Default |
+| ----- | ---------------------------------------------------- | ----------- | -------- | ------- |
+| name  | Name of the secret to be mounted, must already exist | String      | true     | N/A     |
+| path  | The path to mount the secret on                      | String      | true     | N/A     |
+| items | List of secret keys to mount                         | SecretItems | true     | N/A     |
+
+Or:
+
+| Field | Description                                                                                          | Type   | Required | Default |
+| ----- | ---------------------------------------------------------------------------------------------------- | ------ | -------- | ------- |
+| name  | Name of the secret to be mounted, must already exist                                                 | String | true     | N/A     |
+| path  | The path to mount the secret on                                                                      | String | true     | N/A     |
+| path  | The path to mount the secret on                                                                      | String | true     | N/A     |
+| from  | String in the format `${gcp:<secret-name>/<secret-version>}` as described on the [env](#env) section | String | true     | N/A     |
+
+### `SecretItems`
+
+| Field | Description                          | Type   | Required | Default |
+| ----- | ------------------------------------ | ------ | -------- | ------- |
+| name  | Name of the secret key to be mounted | String | true     | N/A     |
+| path  | The file to mount the secret on      | String | true     | N/A     |
+
 
 ### `Config`
 
@@ -83,6 +110,13 @@ The service should be configured at `values.yaml`, here's its API:
 |--------|---------------------------------------|--------|----------|------------------------------------|
 | cpu    | Amount of CPU in milicores (e.g 500m) | string | false    | For limit: 500m For requests: N/A  |
 | memory | Amount of memory (e.g 512Mi)          | string | false    | For limit: 512Mi For requests: N/A |
+
+### `env`
+
+If the `env` value is in the format `${gcp:<secret-name>/<secret-version>}`
+then a secret called `<secret-name>` and with version `<secret-version>`
+will be retrieved from gcp secret manager and mounted on the environment
+variable.
 
 ## Example configuration values.yaml
 

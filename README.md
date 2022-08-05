@@ -68,12 +68,12 @@ Either:
 
 Or:
 
-| Field | Description                                                                                          | Type   | Required | Default |
-| ----- | ---------------------------------------------------------------------------------------------------- | ------ | -------- | ------- |
-| name  | Name of the secret to be mounted, must already exist                                                 | String | true     | N/A     |
-| path  | The path to mount the secret on                                                                      | String | true     | N/A     |
-| path  | The path to mount the secret on                                                                      | String | true     | N/A     |
-| from  | String in the format `${gcp:<secret-name>/<secret-version>}` as described on the [env](#env) section | String | true     | N/A     |
+| Field      | Description                                                              | Type   | Required | Default |
+| ---------- | ------------------------------------------------------------------------ | ------ | -------- | ------- |
+| name       | Name of the secret to be mounted, must already exist                     | String | true     | N/A     |
+| path       | The path to mount the secret on                                          | String | true     | N/A     |
+| path       | The path to mount the secret on                                          | String | true     | N/A     |
+| fromRemote | Map with name and version of the secret on the remote GCP Secret Manager | map    | true     | N/A     |
 
 ### `SecretItems`
 
@@ -113,10 +113,10 @@ Or:
 
 ### `env`
 
-If the `env` value is in the format `${gcp:<secret-name>/<secret-version>}`
-then a secret called `<secret-name>` and with version `<secret-version>`
-will be retrieved from gcp secret manager and mounted on the environment
-variable.
+If the `env` value is a `map` with the values `fromSecret.name` and
+`fromSecret.version` then the Chart will create a Kubernetes secret which
+retrieves this secret from GCP Secret Manager and makes it available on the
+container as an environment variable.
 
 ## Example configuration values.yaml
 

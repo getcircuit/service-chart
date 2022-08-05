@@ -2,8 +2,14 @@ name: service-template
 environments:
 - env:
     TEST_ENV: Example env var
-    A_SECRET_VALUE: ${gcp:staging--secret--value/1}
-    ANOTHER_SECRET_VALUE: ${gcp:very--secret/1}
+    A_SECRET_VALUE: 
+      fromSecret:
+        name: staging--secret--value
+        version: "1"
+    ANOTHER_SECRET_VALUE: 
+      fromSecret:
+        name: very--secret
+        version: latest
   metrics:
     enabled: true
     interval: 10s
@@ -37,7 +43,9 @@ environments:
           path: "teams.json"
         - key: "test.json"
           path: "test.json"
-    - from: ${gcp:mounted--secret/1}
+    - fromRemote: 
+          name: mounted--secret
+          version: 1
       path: /etc/secret
       file: 'asdf.json'
       name: mounted-secret

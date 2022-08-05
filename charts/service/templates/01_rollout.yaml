@@ -157,12 +157,12 @@ spec:
           {{- /* */}}
           env:
           {{- range $key, $value := $environment.env}}
-            {{- if regexMatch "^\\s*\\$\\{gcp:.*/[0-9]*\\}$" $value }}
-            {{ $keyInfo := trim $value | trimPrefix "${gcp:" | trimSuffix "}" | splitList "/" }}
+            {{- if kindIs "map" $value }}
+            {{- $secret := $value.fromSecret }}
           - name: {{ $key | quote }}
             valueFrom: 
               name: {{ $name | quote }}
-              key: {{ printf "%s-%s" $key (join "-version-env-" $keyInfo) }}
+              key: {{ printf "%s-%s" $key (join "-version-env-" (list $secret.name $secret.version)) }}
             {{- else}}
           - name: {{ $key | quote }}
             value: {{ $value | quote }}
@@ -181,26 +181,24 @@ spec:
           {{- end }}
       volumes:
       {{- if $environment.volumes.secrets }}
-      {{- range $i, $secret := $environment.volumes.secrets }}
-      {{- if kindIs "string" $secret.from }}
-      {{- if regexMatch "^\\s*\\$\\{gcp:.*/[0-9]*\\}$" $secret.from }}
-      {{ $keyInfo := trim $secret.from | trimPrefix "${gcp:" | trimSuffix "}" | splitList "/" }}
+      {{- range $i, $value := $environment.volumes.secrets }}
+      {{- if kindIs "map" $value.fromRemote }}
+      {{- $secret := $value.fromRemote }}
       - name: {{ $secret.name | quote }}
         secret:
           secretName: {{ $name | quote }}
           items:
-          - key: {{ printf "%s-%s" $secret.name (join "-version-mount-" $keyInfo) }}
-            path: {{ $secret.file | quote }}
+          - key: {{ printf "%s-%s" $value.name (join "-version-mount-" (list $secret.name $secret.version)) }}
+            path: {{ $value.file | quote }}
       {{- else }}
-      - name: {{ $secret.name | quote }}
+      - name: {{ $value.name | quote }}
         secret:
-          secretName: {{ $secret.name | quote }}
+          secretName: {{ $value.name | quote }}
           items:
-            {{- range $j, $item := $secret.items }}
+            {{- range $j, $item := $value.items }}
           - key: {{ $item.key | quote }}
             path: {{ $item.path | quote }}
             {{- end }}
-      {{- end }}
       {{- end }}
       {{- end }}
       {{- end }}

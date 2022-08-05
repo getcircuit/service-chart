@@ -180,9 +180,10 @@ spec:
             {{- end }}
           {{- end }}
       volumes:
-      {{- if and $environment.volumes $environment.volumes.secrets }}
+      {{- if $environment.volumes.secrets }}
       {{- range $i, $secret := $environment.volumes.secrets }}
-      {{- if and (kindIs "string" $secret.from) (regexMatch "^\\s*\\$\\{gcp:.*/[0-9]*\\}$" $secret.from) }}
+      {{- if kindIs "string" $value.from }}
+      {{- if regexMatch "^\\s*\\$\\{gcp:.*/[0-9]*\\}$" $value.from }}
       {{ $keyInfo := trim $secret.from | trimPrefix "${gcp:" | trimSuffix "}" | splitList "/" }}
       - name: {{ $secret.name | quote }}
         secret:
@@ -199,6 +200,7 @@ spec:
           - key: {{ $item.key | quote }}
             path: {{ $item.path | quote }}
             {{- end }}
+      {{- end }}
       {{- end }}
       {{- end }}
       {{- end }}

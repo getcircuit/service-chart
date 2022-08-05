@@ -157,63 +157,49 @@ spec:
           {{- /* */}}
           env:
           {{- range $key, $value := $environment.env}}
+            {{- if kindIs "map" $value }}
+            {{- $secret := $value.fromSecret }}
+          - name: {{ $key | quote }}
+            valueFrom: 
+              name: {{ $name | quote }}
+              key: {{ printf "%s-%s" $key (join "-version-env-" (list $secret.name $secret.version)) }}
+            {{- else}}
           - name: {{ $key | quote }}
             value: {{ $value | quote }}
+            {{- end }}
           {{- end }}
           {{- /* */}}
           {{- end }}
-      {{- if or $environment.secret $environment.config $environment.secrets }}
+      {{- if $environment.volumes }}
           volumeMounts:
-          {{- if $environment.config }}
-          - mountPath: /etc/config
-            readOnly: true
-            name: config
-          {{- end }}
-          {{- if $environment.secret }}
-          - mountPath: /etc/secret
-            readOnly: true
-            name: secret
-          {{- end }}
-          {{- if $environment.secrets }}
-          {{- range $i, $secret := $environment.secrets }}
+          {{- if $environment.volumes.secrets }}
+            {{- range $i, $secret := $environment.volumes.secrets }}
           - mountPath: {{ $secret.path }}
             readOnly: true
             name: {{ $secret.name }}
-          {{- end }}
+            {{- end }}
           {{- end }}
       volumes:
-      {{- $envName := $environment.name | default "prod" }}
-      {{- /* */}}
-      {{- if $environment.secret }}
-      {{- $secretName := printf "%s--%s--%s" $envName $.Values.name $environment.secret.name }}
-      - name: secret
+      {{- if $environment.volumes.secrets }}
+      {{- range $i, $value := $environment.volumes.secrets }}
+      {{- if kindIs "map" $value.fromRemote }}
+      {{- $secret := $value.fromRemote }}
+      - name: {{ $secret.name | quote }}
         secret:
-          secretName: {{ $secretName }}
+          secretName: {{ $name | quote }}
           items:
-          - key: {{ $environment.secret.name }} 
-            path: {{ $environment.secret.name }}
-      {{- end }}
-      {{- /* */}}
-      {{- if $environment.config }}
-      {{- $configName := printf "%s--%s--%s" $envName $.Values.name $environment.config.name }}
-      - name: config
-        configMap:
-          name: {{ $configName }}
-          items:
-            - key: {{ printf "%s.yaml" $environment.config.name }} 
-              path: {{ printf "%s.yaml" $environment.config.name }} 
-      {{- end }}
-      {{- /* */}}
-      {{- if $environment.secrets }}
-      {{- range $i, $secret := $environment.secrets }}
-      - name: {{ $secret.name }}
+          - key: {{ printf "%s-%s" $value.name (join "-version-mount-" (list $secret.name $secret.version)) }}
+            path: {{ $value.file | quote }}
+      {{- else }}
+      - name: {{ $value.name | quote }}
         secret:
-          secretName: {{ $secret.name }}
+          secretName: {{ $value.name | quote }}
           items:
-          {{- range $j, $item := $secret.items }}
-          - key: {{ $item }}
-            path: {{ $item }}
-          {{- end }}
+            {{- range $j, $item := $value.items }}
+          - key: {{ $item.key | quote }}
+            path: {{ $item.path | quote }}
+            {{- end }}
+      {{- end }}
       {{- end }}
       {{- end }}
       {{- /* */}}

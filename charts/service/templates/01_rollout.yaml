@@ -161,8 +161,9 @@ spec:
             {{- $secret := $value.fromSecret }}
           - name: {{ $key | quote }}
             valueFrom: 
-              name: {{ $name | quote }}
-              key: {{ printf "%s-%s" $key (join "-version-env-" (list $secret.name $secret.version)) }}
+              secretKeyRef:
+                name: {{ $name | quote }}
+                key: {{ printf "%s-%s" $key (join "-version-env-" (list $secret.name $secret.version)) }}
             {{- else}}
           - name: {{ $key | quote }}
             value: {{ $value | quote }}

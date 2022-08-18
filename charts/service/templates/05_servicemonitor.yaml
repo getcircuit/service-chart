@@ -4,7 +4,7 @@
 {{- if $environment.metrics.enabled }}
 {{- /* */}}
 {{ $name := printf "%s--%s" $environment.name $.Values.name }}
-{{ if and $environment.production $environment.mainService }}
+{{- if and $environment.production (not $environment.name) }}
   {{ $name = $.Values.name }}
 {{- end }}
 {{- /* */}}

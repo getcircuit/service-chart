@@ -117,3 +117,39 @@ environments:
     limits: 
       cpu: 500m
       memory: 256Mi
+- env:
+    TEST_ENV: Production env var
+  metrics:
+    enabled: true
+    interval: 60s
+  minReplicas: 1
+  maxReplicas: 5
+  port: 3000
+  production: true
+  name: another_production
+  command: ["my", "custom", "command"]
+  version: v0.0.2
+  targetCPU: 95
+  public: true
+  volumes:
+    secrets:
+    - name: firestore-service-accounts
+      path: /etc/secrets
+      items: 
+        - key: "api.json"
+          path: "api.json"
+        - key: "consumer.json"
+          path: "consumer.json"
+        - key: "dev.json"
+          path: "dev.json"
+        - key: "teams.json"
+          path: "teams.json"
+        - key: "test.json"
+          path: "test.json"
+  resources:
+    requests:
+      cpu: 200m
+      memory: 64Mi
+    limits: 
+      cpu: 500m
+      memory: 256Mi

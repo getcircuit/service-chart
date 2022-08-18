@@ -16,10 +16,9 @@ default:
   repo: europe-west2-docker.pkg.dev/circuit-api-284012/getcircuit
   port: 8080
   version: latest
-  namespace: apps
   public: true
   metricsInterval: 30s
-  projectId: '649859665426'
+  projectId: "649859665426"
   healthcheck:
     liveness:
       path: /health
@@ -36,13 +35,16 @@ default:
       timeout: 30
       success: 1
 rolloutStrategy:
-- setWeight: 5
-- pause: {}
+  - setWeight: 5
+  - pause: {}
 environments:
-- production: true
-  metrics:
-    enabled: true
+  - production: true
+    metrics:
+      enabled: true
 mirror:
   enabled: false
   percentage:
   environment:
+global:
+  prodNamespace: apps
+  stagingNamespace: staging--apps

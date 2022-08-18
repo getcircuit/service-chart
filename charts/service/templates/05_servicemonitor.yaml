@@ -1,13 +1,16 @@
-{{ $namespace := .Values.namespace | default "apps" }}
-{{- /* */}}
 {{- range $k, $environment := .Values.environments }}
 {{- /* */}}
 {{- if $environment.metrics }}
 {{- if $environment.metrics.enabled }}
 {{- /* */}}
 {{ $name := printf "%s--%s" $environment.name $.Values.name }}
-{{ if $environment.production }}
+{{- if and $environment.production (not $environment.name) }}
   {{ $name = $.Values.name }}
+{{- end }}
+{{- /* */}}
+{{ $namespace := $.Values.global.stagingNamespace }}
+{{- if $environment.production }}
+  {{ $namespace = $.Values.global.prodNamespace }}
 {{- end }}
 {{- /* */}}
 apiVersion: monitoring.coreos.com/v1

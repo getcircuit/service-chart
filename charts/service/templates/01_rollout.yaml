@@ -3,9 +3,8 @@
 {{- end }}
 {{- /* */}}
 {{ $repo := .Values.repo | default .Values.default.repo }}
-{{ $namespace := .Values.namespace | default .Values.default.namespace }}
 {{- /* */}}
-{{ $seenProdBefore := 0 }}
+{{ $seenMainServiceBefore := 0 }}
 {{- /* */}}
 {{- range $k, $environment := .Values.environments }}
 {{ $version := $environment.version | default $.Values.default.version }}
@@ -34,14 +33,18 @@
 {{- end }}
 {{- /* */}}
 {{ $name := printf "%s--%s" $environment.name $.Values.name }}
-{{- /* */}}
-{{ if $environment.production }}
-  {{ if $seenProdBefore }}
-    {{ fail "You may only have ONE production environment" }}
-  {{ else }}
-  {{ $seenProdBefore = 1 }}
+{{- if and $environment.production $environment.mainService }}
+  {{- if $seenMainServiceBefore }}
+    {{ fail "You may only have ONE main production environment" }}
+  {{- else }}
+    {{ $seenMainServiceBefore = 1 }}
   {{- end }}
   {{ $name = $.Values.name }}
+{{- end }}
+{{- /* */}}
+{{ $namespace := $.Values.global.stagingNamespace }}
+{{- if $environment.production }}
+  {{ $namespace = $.Values.global.prodNamespace }}
 {{- end }}
 {{- /* */}}
 apiVersion: argoproj.io/v1alpha1

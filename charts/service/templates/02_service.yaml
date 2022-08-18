@@ -1,10 +1,13 @@
-{{ $namespace := .Values.namespace | default "apps" }}
-{{- /* */}}
 {{- range $k, $environment := .Values.environments }}
 {{- /* */}}
 {{ $name := printf "%s--%s" $environment.name $.Values.name }}
-{{ if $environment.production }}
+{{ if and $environment.production $environment.mainService }}
   {{ $name = $.Values.name }}
+{{- end }}
+{{- /* */}}
+{{ $namespace := $.Values.global.stagingNamespace }}
+{{- if $environment.production }}
+  {{ $namespace = $.Values.global.prodNamespace }}
 {{- end }}
 {{- /* */}}
 apiVersion: v1

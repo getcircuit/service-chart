@@ -58,7 +58,8 @@ metadata:
 spec:
   strategy:
     canary:
-      maxUnavailable: "30%"
+      maxUnavailable: "0%"
+      maxSurge: "50%"
       canaryService: {{ printf "%s-canary" $name }}
       stableService: {{ printf "%s-stable" $name }}
       trafficRouting:

@@ -190,7 +190,7 @@ spec:
       {{- range $i, $value := $environment.volumes.secrets }}
       {{- if kindIs "map" $value.fromRemote }}
       {{- $secret := $value.fromRemote }}
-      - name: {{ $secret.name | quote }}
+      - name: {{ $value.name | quote }}
         secret:
           secretName: {{ $name | quote }}
           items:

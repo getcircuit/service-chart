@@ -120,7 +120,7 @@ spec:
           ports:
           - name: http
             containerPort: {{ $environment.port | default $.Values.default.port }}
-          imagePullPolicy: IfNotPresent
+          imagePullPolicy: {{ $environment.imagePullPolicy | default $.Values.default.imagePullPolicy }}
           {{- if $environment.command }}
           command:
           {{- range $key, $part := $environment.command }}

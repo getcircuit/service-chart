@@ -14,6 +14,7 @@ default:
   host: getcircuit.io
   gateway: public
   repo: europe-west2-docker.pkg.dev/circuit-api-284012/getcircuit
+  imagePullPolicy: IfNotPresent
   port: 8080
   version: latest
   public: true

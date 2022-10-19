@@ -11,6 +11,14 @@ entries:
     version: 0.0.2
   service:
   - apiVersion: v2
+    created: "2022-10-19T17:23:15.976420352Z"
+    description: Helm chart for Circuit service definition
+    digest: 97a151eea1a7cb3da26b2c3e3946776b140b6c5716d808470fa347d55a567824
+    name: service
+    urls:
+    - https://github.com/getcircuit/service-chart/releases/download/service-3.4.0/service-3.4.0.tgz
+    version: 3.4.0
+  - apiVersion: v2
     created: "2022-09-21T16:15:57.015048822Z"
     description: Helm chart for Circuit service definition
     digest: ac183a952a73b6b6273985f0454bb0f0da3b6540ba71d8b4f4fc9b1d3298d9b5

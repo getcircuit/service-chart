@@ -1,0 +1,54 @@
+{{- range $k, $environment := .Values.environments }}
+
+{{- if $environment.auth }}
+
+{{- if not $environment.auth.issuer }}
+{{ fail "You must provide the issuer when enabling auth" }}
+{{- end }}
+
+{{- if not $environment.auth.jwksUri }}
+{{ fail "You must provide the jwksUri when enabling auth" }}
+{{- end }}
+
+{{ $name := printf "%s--%s" $environment.name $.Values.name }}
+{{- if and $environment.production (not $environment.name) }}
+  {{ $name = $.Values.name }}
+{{- end }}
+
+{{ $namespace := $.Values.global.stagingNamespace }}
+{{- if $environment.production }}
+  {{ $namespace = $.Values.global.prodNamespace }}
+{{- end }}
+
+apiVersion: security.istio.io/v1beta1
+kind: RequestAuthentication
+metadata:
+  name: {{ $name }}
+  namespace: {{ $namespace }}
+spec:
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: {{ $name }}
+  jwtRules:
+  - issuer: {{ $environment.auth.issuer }}
+    jwksUri: {{ $environment.auth.jwksUri }}
+---
+apiVersion: security.istio.io/v1beta1
+kind: AuthorizationPolicy
+metadata:
+  name: {{ $name }}
+  namespace: {{ $namespace }}
+spec:
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: {{ $name }}
+  action: ALLOW
+  rules:
+  - when:
+    - key: request.auth.claims[iss]
+      values:
+      - {{ $environment.auth.issuer }}
+---
+{{- end }}
+
+{{- end }}

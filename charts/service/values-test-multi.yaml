@@ -27,6 +27,9 @@ environments:
       prefix: "/health"
   version: v0.0.2
   targetCPU: 80
+  auth:
+    issuer: testing@secure.istio.io
+    jwksUri: https://raw.githubusercontent.com/istio/istio/release-1.16/security/tools/jwt/samples/jwks.json
   public: true
   volumes:
     secrets:
@@ -90,6 +93,9 @@ environments:
   maxReplicas: 5
   port: 3000
   production: false
+  auth:
+    issuer: testing@secure.istio.io
+    jwksUri: https://raw.githubusercontent.com/istio/istio/release-1.16/security/tools/jwt/samples/jwks.json
   name: staging
   imagePullPolicy: Always
   command: ["my", "custom", "command"]

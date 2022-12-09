@@ -168,7 +168,7 @@ spec:
             valueFrom: 
               secretKeyRef:
                 name: {{ $name | quote }}
-                key: {{ printf "%s-%s" $key (join "-version-env-" (list $secret.name $secret.version)) }}
+                key: {{ include "secrets.key.env" (dict "key" $key "secret" $secret) }}
             {{- else}}
           - name: {{ $key | quote }}
             value: {{ $value | quote }}
@@ -194,7 +194,7 @@ spec:
         secret:
           secretName: {{ $name | quote }}
           items:
-          - key: {{ printf "%s-%s" $value.name (join "-version-mount-" (list $secret.name $secret.version)) }}
+          - key: {{ include "secrets.key.mount" (dict "key" $value.name "secret" $secret) }}
             path: {{ $value.file | quote }}
       {{- else }}
       - name: {{ $value.name | quote }}

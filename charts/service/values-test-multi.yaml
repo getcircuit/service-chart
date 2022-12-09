@@ -51,7 +51,7 @@ environments:
           version: 1
       path: /etc/secret
       file: 'asdf.json'
-      name: mounted-secret
+      name: mounted-secret-name
   rolloutAnalysis:
     successCondition: 0.99
   customRoute:

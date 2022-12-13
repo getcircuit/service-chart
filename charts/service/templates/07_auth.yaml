@@ -45,6 +45,9 @@ spec:
       app.kubernetes.io/name: {{ $name }}
   action: ALLOW
   rules:
+  - to:
+    - operation:
+        methods: ['OPTIONS']
   - when:
     - key: request.auth.claims[iss]
       values:

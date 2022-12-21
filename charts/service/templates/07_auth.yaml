@@ -45,6 +45,14 @@ spec:
       app.kubernetes.io/name: {{ $name }}
   action: ALLOW
   rules:
+  {{- if $environment.auth.allowPaths }}
+  - to:
+    - operation:
+        paths:
+        {{- range $path := $environment.auth.allowPaths }}
+        - {{ $path }}
+        {{- end }}
+  {{- end }}
   - to:
     - operation:
         methods: ['OPTIONS']

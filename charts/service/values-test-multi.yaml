@@ -30,6 +30,8 @@ environments:
   auth:
     issuer: testing@secure.istio.io
     jwksUri: https://raw.githubusercontent.com/istio/istio/release-1.16/security/tools/jwt/samples/jwks.json
+    allowPaths:
+    - '/metrics'
   public: true
   volumes:
     secrets:

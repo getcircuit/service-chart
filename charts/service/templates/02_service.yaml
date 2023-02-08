@@ -1,4 +1,7 @@
 {{- range $k, $environment := .Values.environments }}
+{{- /* Deploy production environment only when deployProduction override isn't set */}}
+{{ $deployProduction := $.Values.overrides.deployProduction }}
+{{- if or (not $environment.production) $deployProduction }}
 {{- /* */}}
 {{ $name := printf "%s--%s" $environment.name $.Values.name }}
 {{- if and $environment.production (not $environment.name) }}
@@ -44,4 +47,5 @@ spec:
       name: http
       targetPort: http
 ---
+{{- end }}
 {{- end }}

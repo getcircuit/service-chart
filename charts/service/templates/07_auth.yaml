@@ -1,4 +1,7 @@
 {{- range $k, $environment := .Values.environments }}
+{{- /* Deploy production environment only when deployProduction override isn't set */}}
+{{ $deployProduction := $.Values.overrides.deployProduction }}
+{{- if or (not $environment.production) $deployProduction }}
 
 {{- if $environment.auth }}
 
@@ -63,4 +66,5 @@ spec:
 ---
 {{- end }}
 
+{{- end }}
 {{- end }}

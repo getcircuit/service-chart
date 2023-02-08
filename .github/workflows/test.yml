@@ -24,3 +24,13 @@ jobs:
         run: sudo snap install helm --classic
       - name: Template service chart
         run: cd charts/service && helm template test ./ -f values-test-multi.yaml
+  service-overrides-template:
+    name: Build with multiple environments
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Repo
+        uses: actions/checkout@v2
+      - name: Setup Helm
+        run: sudo snap install helm --classic
+      - name: Template service chart
+        run: cd charts/service && helm template test ./ -f values-test-overrides.yaml

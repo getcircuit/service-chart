@@ -1,0 +1,31 @@
+name: service-template
+environments:
+- env:
+    TEST_ENV: Example env var
+    A_SECRET_VALUE: 
+      fromSecret:
+        name: staging--secret--value
+        version: "1"
+    ANOTHER_SECRET_VALUE: 
+      fromSecret:
+        name: very--secret
+        version: latest
+  production: true
+  version: v0.0.2
+  customDomains:
+  - api.getcircuit.com
+  - api-test.getcircuit.com
+  customMatch:
+  - uri:
+      prefix: "/rest"
+  - uri:
+      prefix: "/health"
+- env:
+    TEST_ENV: Staging env var
+  production: false
+  name: staging
+  imagePullPolicy: Always
+  command: ["my", "custom", "command"]
+  version: v0.0.2
+overrides:
+  deployProduction: false

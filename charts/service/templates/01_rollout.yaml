@@ -7,6 +7,9 @@
 {{ $seenMainServiceBefore := 0 }}
 {{- /* */}}
 {{- range $k, $environment := .Values.environments }}
+{{- /* Deploy production environment only when deployProduction override isn't set */}}
+{{ $deployProduction := $.Values.overrides.deployProduction }}
+{{- if or (not $environment.production) $deployProduction }}
 {{ $version := $environment.version | default $.Values.default.version }}
 {{- /* */}}
 {{- if not $environment.name }}
@@ -211,4 +214,5 @@ spec:
       {{- /* */}}
       {{- end }}
 ---
+{{- end }}
 {{- end }}

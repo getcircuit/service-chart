@@ -49,3 +49,5 @@ mirror:
 global:
   prodNamespace: apps
   stagingNamespace: staging--apps
+overrides:
+  deployProduction: true

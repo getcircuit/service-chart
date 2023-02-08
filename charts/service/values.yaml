@@ -51,3 +51,5 @@ global:
   stagingNamespace: staging--apps
 overrides:
   deployProduction: true
+  environmentName:
+  version:

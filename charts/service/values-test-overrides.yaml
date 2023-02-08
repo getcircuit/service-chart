@@ -22,6 +22,10 @@ environments:
       prefix: "/health"
 - env:
     TEST_ENV: Staging env var
+    A_SECRET_VALUE: 
+      fromSecret:
+        name: staging--secret--value
+        version: "1"
   production: false
   name: staging
   imagePullPolicy: Always
@@ -29,3 +33,5 @@ environments:
   version: v0.0.2
 overrides:
   deployProduction: false
+  environmentName: pro-1234-my-branch
+  version: pro-1234-my-branch

@@ -11,6 +11,9 @@
 {{ $deployProduction := $.Values.overrides.deployProduction }}
 {{- if or (not $environment.production) $deployProduction }}
 {{ $version := $environment.version | default $.Values.default.version }}
+{{- if and $.Values.overrides.version }}
+  {{ $version = $.Values.overrides.version }}
+{{- end }}
 {{- /* */}}
 {{- if not $environment.name }}
   {{- if not $environment.production }}
@@ -43,6 +46,9 @@
     {{ $seenMainServiceBefore = 1 }}
   {{- end }}
   {{ $name = $.Values.name }}
+{{- end }}
+{{- if and $.Values.overrides.environmentName }}
+  {{ $name = printf "%s--%s" $.Values.overrides.environmentName $.Values.name }}
 {{- end }}
 {{- /* */}}
 {{ $namespace := $.Values.global.stagingNamespace }}

@@ -67,6 +67,9 @@ spec:
   {{- if $headers }}
     {{- $_ := set $match "headers" $headers }}
   {{- end }}
+  {{- if not $overrideHeaders }}
+    {{- $_ := set $match "withoutHeaders" (dict "circuit-feature-environment" dict ) }}
+  {{- end }}
 {{- end }}
     match:
 {{ $environment.customMatch | toYaml | indent 4 }}

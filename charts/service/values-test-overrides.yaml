@@ -26,12 +26,29 @@ environments:
       fromSecret:
         name: staging--secret--value
         version: "1"
+  customMatch:
+  - uri:
+      prefix: "/public/v1"
+  - uri:
+      prefix: "/public/v2"
+    headers:
+      custom-header:
+        exact: jason
+  customDomains:
+  - staging-api.getcircuit.com
   production: false
   name: staging
   imagePullPolicy: Always
   command: ["my", "custom", "command"]
   version: v0.0.2
+- production: false
+  name: test
+  imagePullPolicy: Always
+  command: ["my", "test", "command"]
+  version: v0.0.2
 overrides:
   deployProduction: false
   environmentName: pro-1234-my-branch
   version: pro-1234-my-branch
+  matchHeaders:
+    circuit-feature-environment: pro-1234-my-branch

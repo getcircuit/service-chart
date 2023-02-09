@@ -11,7 +11,7 @@
   {{ $name = $.Values.name }}
 {{- end }}
 {{- if and $.Values.overrides.environmentName }}
-  {{ $name = printf "%s--%s" $.Values.overrides.environmentName $.Values.name }}
+  {{ $name = printf "%s-%s--%s" $.Values.overrides.environmentName ($environment.name | default "default") $.Values.name }}
 {{- end }}
 {{- /* */}}
 {{ $namespace := $.Values.global.stagingNamespace }}

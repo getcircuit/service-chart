@@ -1,4 +1,7 @@
 {{- range $k, $environment := .Values.environments }}
+{{- /* Deploy production environment only when deployProduction override isn't set */}}
+{{ $deployProduction := $.Values.overrides.deployProduction }}
+{{- if or (not $environment.production) $deployProduction }}
 {{- /* */}}
 {{- if $environment.metrics }}
 {{- if $environment.metrics.enabled }}
@@ -6,6 +9,9 @@
 {{ $name := printf "%s--%s" $environment.name $.Values.name }}
 {{- if and $environment.production (not $environment.name) }}
   {{ $name = $.Values.name }}
+{{- end }}
+{{- if and $.Values.overrides.environmentName }}
+  {{ $name = printf "%s-%s--%s" $.Values.overrides.environmentName ($environment.name | default "default") $.Values.name }}
 {{- end }}
 {{- /* */}}
 {{ $namespace := $.Values.global.stagingNamespace }}
@@ -35,6 +41,7 @@ spec:
     matchLabels:
       app.kubernetes.io/name: {{ $name }}
 ---
+{{- end }}
 {{- end }}
 {{- end }}
 {{- end }}

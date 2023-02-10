@@ -3,10 +3,16 @@
 {{ $gateway := .Values.gateway | default .Values.default.gateway }}
 {{- /* */}}
 {{- range $k, $environment := .Values.environments }}
+{{- /* Deploy production environment only when deployProduction override isn't set */}}
+{{ $deployProduction := $.Values.overrides.deployProduction }}
+{{- if or (not $environment.production) $deployProduction }}
 {{- /* */}}
 {{ $name := printf "%s--%s" $environment.name $.Values.name }}
 {{- if and $environment.production (not $environment.name) }}
   {{ $name = $.Values.name }}
+{{- end }}
+{{- if and $.Values.overrides.environmentName }}
+  {{ $name = printf "%s-%s--%s" $.Values.overrides.environmentName ($environment.name | default "default") $.Values.name }}
 {{- end }}
 {{- /* */}}
 {{ $namespace := $.Values.global.stagingNamespace }}
@@ -49,11 +55,29 @@ spec:
   {{- if $environment.customRoute }}
 {{ $environment.customRoute | toYaml | indent 2 }}
   {{- end }}
+{{- $overrideHeaders := dict }}
+{{- range $headerName, $headerValue := $.Values.overrides.matchHeaders }}
+  {{- $_ := set $overrideHeaders $headerName (dict "exact" $headerValue) }}
+{{- end }}
   - name: primary
-    {{- if $environment.customMatch }}
+{{- if $environment.customMatch }}
+{{- range $k, $match := $environment.customMatch }}
+  {{- $headers := get $match "headers" | default dict }}
+  {{- $_ := mergeOverwrite $headers $overrideHeaders }}
+  {{- if $headers }}
+    {{- $_ := set $match "headers" $headers }}
+  {{- end }}
+  {{- if not $overrideHeaders }}
+    {{- $_ := set $match "withoutHeaders" (dict "circuit-feature-environment" dict ) }}
+  {{- end }}
+{{- end }}
     match:
 {{ $environment.customMatch | toYaml | indent 4 }}
-    {{- end }}
+{{- else if $overrideHeaders }}
+    match:
+{{- $matchHeaders := list (dict "headers" $overrideHeaders) }}
+{{ $matchHeaders | toYaml | indent 4 }}
+{{- end }}
     route:
     - destination:
         host: {{ printf "%s-stable" $name }}
@@ -76,4 +100,5 @@ spec:
     {{- end }}
     {{- end }}
 ---
+{{- end }}
 {{- end }}

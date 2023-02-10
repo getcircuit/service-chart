@@ -7,7 +7,13 @@
 {{ $seenMainServiceBefore := 0 }}
 {{- /* */}}
 {{- range $k, $environment := .Values.environments }}
+{{- /* Deploy production environment only when deployProduction override isn't set */}}
+{{ $deployProduction := $.Values.overrides.deployProduction }}
+{{- if or (not $environment.production) $deployProduction }}
 {{ $version := $environment.version | default $.Values.default.version }}
+{{- if and $.Values.overrides.version }}
+  {{ $version = $.Values.overrides.version }}
+{{- end }}
 {{- /* */}}
 {{- if not $environment.name }}
   {{- if not $environment.production }}
@@ -40,6 +46,9 @@
     {{ $seenMainServiceBefore = 1 }}
   {{- end }}
   {{ $name = $.Values.name }}
+{{- end }}
+{{- if and $.Values.overrides.environmentName }}
+  {{ $name = printf "%s-%s--%s" $.Values.overrides.environmentName ($environment.name | default "default") $.Values.name }}
 {{- end }}
 {{- /* */}}
 {{ $namespace := $.Values.global.stagingNamespace }}
@@ -211,4 +220,5 @@ spec:
       {{- /* */}}
       {{- end }}
 ---
+{{- end }}
 {{- end }}

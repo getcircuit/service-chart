@@ -56,6 +56,15 @@ environments:
       name: mounted-secret-name
   rolloutAnalysis:
     successCondition: 0.99
+  clusterAuth:
+    routes:
+      - paths:
+          - /
+          - /hello-world
+        methods:
+          - POST
+        services:
+          - 'another-production'
   customRoute:
   - name: route-to-ms
     match:

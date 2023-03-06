@@ -64,7 +64,7 @@ environments:
         methods:
           - POST
         services:
-          - 'another-production'
+          - 'hello-world-service'
   customRoute:
   - name: route-to-ms
     match:
@@ -166,6 +166,12 @@ environments:
           path: "teams.json"
         - key: "test.json"
           path: "test.json"
+  clusterAuth:
+    routes:
+      - paths:
+          - /
+        services:
+          - 'a-service'
   resources:
     requests:
       cpu: 200m

@@ -121,7 +121,13 @@ spec:
       annotations:
         cluster-autoscaler.kubernetes.io/safe-to-evict: "true"
     spec:
+      {{- if $environment.gcpServiceAccount }}
+      serviceAccountName: {{ $name }}
+      nodeSelector:
+        iam.gke.io/gke-metadata-server-enabled: "true"
+      {{- else }}
       serviceAccountName: apps-sa
+      {{- end }}
       containers:
         - name: {{ $name }}
           {{- $imageName := $.Values.imageName | default $.Values.name }}

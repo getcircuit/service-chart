@@ -99,6 +99,7 @@ environments:
     issuer: testing@secure.istio.io
     jwksUri: https://raw.githubusercontent.com/istio/istio/release-1.16/security/tools/jwt/samples/jwks.json
   name: staging
+  gcpServiceAccount: "suchGcpServiceAccount@veryemail.com"
   imagePullPolicy: Always
   command: ["my", "custom", "command"]
   version: v0.0.2
@@ -131,6 +132,7 @@ environments:
   metrics:
     enabled: true
     interval: 60s
+  gcpServiceAccount: "suchGcpServiceAccountProd@veryemail.com"
   minReplicas: 1
   maxReplicas: 5
   port: 3000

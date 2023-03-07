@@ -46,8 +46,6 @@ spec:
           {{- end }}
       from:
       - source:
-          namespaces:
-            - {{ $namespace }}
           notPrincipals:
             {{- if not (kindIs "slice" $route.services) }}
               {{ fail "clusterAuth.routes.services must be a list" }}

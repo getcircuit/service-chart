@@ -56,6 +56,15 @@ environments:
       name: mounted-secret-name
   rolloutAnalysis:
     successCondition: 0.99
+  clusterAuth:
+    routes:
+      - paths:
+          - /
+          - /hello-world
+        methods:
+          - POST
+        services:
+          - 'hello-world-service'
   customRoute:
   - name: route-to-ms
     match:
@@ -157,6 +166,12 @@ environments:
           path: "teams.json"
         - key: "test.json"
           path: "test.json"
+  clusterAuth:
+    routes:
+      - paths:
+          - /
+        services:
+          - 'a-service'
   resources:
     requests:
       cpu: 200m

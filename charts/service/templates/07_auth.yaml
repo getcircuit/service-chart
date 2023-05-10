@@ -5,12 +5,8 @@
 
 {{- if $environment.auth }}
 
-{{- if not $environment.auth.issuer }}
-{{ fail "You must provide the issuer when enabling auth" }}
-{{- end }}
-
-{{- if not $environment.auth.jwksUri }}
-{{ fail "You must provide the jwksUri when enabling auth" }}
+{{- if not $environment.auth.issuers }}
+{{ fail "You must provide the issuers when enabling auth" }}
 {{- end }}
 
 {{ $name := printf "%s--%s" $environment.name $.Values.name }}
@@ -36,9 +32,18 @@ spec:
     matchLabels:
       app.kubernetes.io/name: {{ $name }}
   jwtRules:
-  - issuer: {{ $environment.auth.issuer }}
-    jwksUri: {{ $environment.auth.jwksUri }}
+  {{- range $issuer := $environment.auth.issuers }}
+  {{- if not $issuer.iss }}
+  {{ fail "You must provide the iss for each issuer" }}
+  {{- end }}
+
+  {{- if not $issuer.jwksUri }}
+  {{ fail "You must provide the jwksUri for each issuer" }}
+  {{- end }}
+  - issuer: {{ $issuer.iss }}
+    jwksUri: {{ $issuer.jwksUri }}
     forwardOriginalToken: true
+  {{- end }}
 ---
 apiVersion: security.istio.io/v1beta1
 kind: AuthorizationPolicy

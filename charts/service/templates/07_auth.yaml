@@ -70,7 +70,9 @@ spec:
   - when:
     - key: request.auth.claims[iss]
       values:
-      - {{ $environment.auth.issuer }}
+      {{- range $issuer := $environment.auth.issuers }}
+      - {{ $issuer.iss }}
+      {{- end }}
 ---
 {{- end }}
 

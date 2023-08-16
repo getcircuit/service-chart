@@ -79,6 +79,11 @@ spec:
             - primary
       {{- if $environment.rolloutAnalysis }}
       analysis:
+        {{- if $environment.rolloutAnalysis.custom }}
+        templates:
+        - templateName: {{ $environment.name }}
+        startingStep: 2
+        {{- else }}
         templates:
         - templateName: success-rate
         startingStep: 2
@@ -87,6 +92,7 @@ spec:
           value: {{ printf "%s-canary" $name }}
         - name: success-condition
           value: "{{ $environment.rolloutAnalysis.successCondition }}"
+        {{- end }}
       {{- end }}
       steps:
       {{- if $environment.rolloutStrategy}}

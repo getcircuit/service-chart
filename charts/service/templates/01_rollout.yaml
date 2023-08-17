@@ -81,7 +81,7 @@ spec:
       analysis:
         {{- if $environment.rolloutAnalysis.custom }}
         templates:
-        - templateName: {{ $environment.name }}
+        - templateName: {{ $name }}
         startingStep: 2
         {{- else }}
         templates:

@@ -168,6 +168,26 @@ environments:
           path: "teams.json"
         - key: "test.json"
           path: "test.json"
+  rolloutAnalysis:
+    custom:
+    - name: my-custom-metric
+      successCondition: "result[0] >= 0.99"
+      query: |
+        sum(irate(
+          http_requests_total{service="service-canary", status!~"5.*"}[2m]
+        )) / 
+        sum(irate(
+          http_requests_total{service="service-canary"}[2m]
+        ))
+    - name: another-metric
+      successCondition: "result[0] >= 0.999"
+      query: |
+        sum(irate(
+          http_requests_total{service="service-canary", path="bleh", status!~"5.*"}[2m]
+        )) / 
+        sum(irate(
+          http_requests_total{service="service-canary", path="bleh"}[2m]
+        ))
   clusterAuth:
     routes:
       - paths:

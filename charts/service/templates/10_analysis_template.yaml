@@ -1,0 +1,46 @@
+{{- range $k, $environment := .Values.environments }}
+{{- /* Deploy production environment only when deployProduction override isn't set */}}
+{{ $deployProduction := $.Values.overrides.deployProduction }}
+{{- if or (not $environment.production) $deployProduction }}
+
+{{- if $environment.clusterAuth }}
+
+{{ $name := printf "%s--%s" $environment.name $.Values.name }}
+{{- if and $environment.production (not $environment.name) }}
+  {{ $name = $.Values.name }}
+{{- end }}
+{{- if and $.Values.overrides.environmentName }}
+  {{ $name = printf "%s-%s--%s" $.Values.overrides.environmentName ($environment.name | default "default") $.Values.name }}
+{{- end }}
+
+{{ $namespace := $.Values.global.stagingNamespace }}
+{{- if $environment.production }}
+  {{ $namespace = $.Values.global.prodNamespace }}
+{{- end }}
+
+{{- if and $environment.rolloutAnalysis $environment.rolloutAnalysis.custom }}
+
+apiVersion: argoproj.io/v1alpha1
+kind: AnalysisTemplate
+metadata:
+  name: {{ $name }}
+  namespace: {{ $namespace }}
+spec:
+  metrics:
+{{- range $i, $metric := $environment.rolloutAnalysis.custom }}
+    - name: {{ $metric.name }}
+      successCondition: {{ $metric.successCondition }}
+      failureLimit: 2
+      interval: {{ $metric.interval | default "30s" }}
+      provider:
+        prometheus:
+          address: "http://monitoring-kube-prometheus-prometheus.monitoring:9090"
+          query: |
+{{ $metric.query | indent 12 }}
+{{- end }}
+---
+{{- end }}
+{{- end }}
+
+{{- end }}
+{{- end }}

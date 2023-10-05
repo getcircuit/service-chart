@@ -134,6 +134,9 @@ spec:
       {{- else }}
       serviceAccountName: apps-sa
       {{- end }}
+      {{- if $environment.terminationGracePeriodSeconds }}
+      terminationGracePeriodSeconds: {{ $environment.terminationGracePeriodSeconds }}
+      {{- end }}
       containers:
         - name: {{ $name }}
           {{- $imageName := $.Values.imageName | default $.Values.name }}

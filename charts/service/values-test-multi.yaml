@@ -15,6 +15,7 @@ environments:
     interval: 10s
   minReplicas: 1
   maxReplicas: 5
+  terminationGracePeriodSeconds: 600
   port: 3000
   production: true
   customDomains:

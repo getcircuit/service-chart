@@ -140,6 +140,7 @@ spec:
       containers:
         {{- if $environment.terminationGracePeriodSeconds }}
         - name: istio-proxy
+          image: auto
           lifecycle:
             preStop:
               exec:

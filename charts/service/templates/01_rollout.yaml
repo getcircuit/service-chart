@@ -126,6 +126,12 @@ spec:
         istio-injection: enabled
       annotations:
         cluster-autoscaler.kubernetes.io/safe-to-evict: "true"
+        {{- if $environment.terminationGracePeriodSeconds }}
+        proxy.istio.io/config: {{ printf 
+          "{\"proxyMetadata\":{\"EXIT_ON_ZERO_ACTIVE_CONNECTIONS\":\"true\"}, \"terminationDrainDuration\":\"%ds\"}"
+          (int $environment.terminationGracePeriodSeconds) 
+          | quote }}
+        {{- end }}
     spec:
       {{- if $environment.gcpServiceAccount }}
       serviceAccountName: {{ $name }}

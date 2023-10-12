@@ -149,7 +149,13 @@ spec:
                 # ensure that the main container can keep on processing the
                 # current requests which require network access before
                 # gracefully shutting down.
-                command: ["/bin/sh", "-c", "while [ $(netstat -plunt | grep tcp | grep -v envoy | grep -v pilot-agent | wc -l | xargs) -ne 0 ]; do sleep 1; done"]
+                command: 
+                  - "/bin/sh"
+                  - "-c"
+                  - >
+                    while [ $(netstat -apn | grep -v envoy | grep -v pilot-agent | awk '$4 ~ /:{{ $environment.port | default $.Values.default.port }}$/ {print}' | wc -l | xargs) -ne 0 ];
+                    do sleep 1;
+                    done
         {{- end }}
         - name: {{ $name }}
           {{- $imageName := $.Values.imageName | default $.Values.name }}

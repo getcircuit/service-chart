@@ -126,12 +126,6 @@ spec:
         istio-injection: enabled
       annotations:
         cluster-autoscaler.kubernetes.io/safe-to-evict: "true"
-        {{- if $environment.terminationGracePeriodSeconds }}
-        proxy.istio.io/config: {{ printf 
-          "{\"proxyMetadata\":{\"EXIT_ON_ZERO_ACTIVE_CONNECTIONS\":\"true\"}, \"terminationDrainDuration\":\"%ds\"}"
-          (int $environment.terminationGracePeriodSeconds) 
-          | quote }}
-        {{- end }}
     spec:
       {{- if $environment.gcpServiceAccount }}
       serviceAccountName: {{ $name }}
@@ -144,6 +138,18 @@ spec:
       terminationGracePeriodSeconds: {{ $environment.terminationGracePeriodSeconds }}
       {{- end }}
       containers:
+        {{- if $environment.terminationGracePeriodSeconds }}
+        - name: istio-proxy
+          lifecycle:
+            preStop:
+              exec:
+                # The following is a hacky workaround for ensuring that the
+                # istio-proxy sidecar is terminated after the main container, to
+                # ensure that the main container can keep on processing the
+                # current requests which require network access before
+                # gracefully shutting down.
+                command: ["/bin/sh", "-c", "while [ $(netstat -plunt | grep tcp | grep -v envoy | wc -l | xargs) -ne 0 ]; do sleep 1; done"]
+        {{- end }}
         - name: {{ $name }}
           {{- $imageName := $.Values.imageName | default $.Values.name }}
           image: {{ printf "%s/%s:%s" $repo $imageName $version }}

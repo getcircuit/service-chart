@@ -32,20 +32,6 @@ spec:
   minReplicas: {{ $environment.minReplicas | default $.Values.default.min }}
   maxReplicas: {{ $environment.maxReplicas | default $.Values.default.max }}
   metrics:
-  - type: Resource
-    resource:
-      name: cpu
-      target:
-        type: Utilization
-        averageUtilization: {{ $environment.targetCPU | default $.Values.default.target }}
-  {{- if and $environment.targetMemory }}
-  - type: Resource
-    resource:
-      name: memory
-      target:
-        type: Utilization
-        averageUtilization: {{ $environment.targetMemory }}
-  {{- end }}
   {{- range $l, $targetCustomMetrics := $environment.targetCustomMetrics }}
   - type: Pods
     pods:
@@ -55,6 +41,20 @@ spec:
         type: AverageValue
         averageValue: {{ $targetCustomMetrics.value }}
   {{- end }}
+  {{- if and $environment.targetMemory }}
+  - type: Resource
+    resource:
+      name: memory
+      target:
+        type: Utilization
+        averageUtilization: {{ $environment.targetMemory }}
+  {{- end }}
+  - type: Resource
+    resource:
+      name: cpu
+      target:
+        type: Utilization
+        averageUtilization: {{ $environment.targetCPU | default $.Values.default.target }}
 ---
 {{- end }}
 {{- end }}

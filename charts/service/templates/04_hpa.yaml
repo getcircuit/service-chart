@@ -16,7 +16,7 @@
   {{ $namespace = $.Values.global.prodNamespace }}
 {{- end }}
 {{- /* */}}
-apiVersion: autoscaling/v1
+apiVersion: autoscaling/v2
 kind: HorizontalPodAutoscaler
 metadata:
   name: {{ $name }}
@@ -31,7 +31,30 @@ spec:
     name: {{ $name }}
   minReplicas: {{ $environment.minReplicas | default $.Values.default.min }}
   maxReplicas: {{ $environment.maxReplicas | default $.Values.default.max }}
-  targetCPUUtilizationPercentage: {{ $environment.targetCPU | default $.Values.default.target }}
+  metrics:
+  - type: Resource
+    resource:
+      name: cpu
+      target:
+        type: Utilization
+        averageUtilization: {{ $environment.targetCPU | default $.Values.default.target }}
+  {{- if and $environment.targetMemory }}
+  - type: Resource
+    resource:
+      name: memory
+      target:
+        type: Utilization
+        averageUtilization: {{ $environment.targetMemory }}
+  {{- end }}
+  {{- range $l, $targetCustomMetrics := $environment.targetCustomMetrics }}
+  - type: Pods
+    pods:
+      metric:
+        name: {{ $targetCustomMetrics.name }}
+      target:
+        type: AverageValue
+        averageValue: {{ $targetCustomMetrics.value }}
+  {{- end }}
 ---
 {{- end }}
 {{- end }}

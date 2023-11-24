@@ -28,6 +28,10 @@ environments:
       prefix: "/health"
   version: v0.0.2
   targetCPU: 80
+  targetMemory: 82
+  targetCustomMetrics:
+  - name: http_requests_per_second
+    value: 42
   auth:
     issuers:
       - iss: testing@secure.istio.io
@@ -153,6 +157,7 @@ environments:
   command: ["my", "custom", "command"]
   version: v0.0.2
   targetCPU: 95
+  targetMemory: 92
   public: true
   volumes:
     secrets:

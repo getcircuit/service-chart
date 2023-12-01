@@ -7,7 +7,7 @@ imageName: null
 default:
   cpuLimit: 500m
   memoryLimit: 512Mi
-  min: 1
+  min: 2
   max: 10
   target: 50
   cluster: circuit-1

@@ -1,0 +1,34 @@
+{{- range $k, $environment := .Values.environments }}
+{{- /* Deploy production environment only when deployProduction override isn't set */}}
+{{ $deployProduction := $.Values.overrides.deployProduction }}
+{{- if or (not $environment.production) $deployProduction }}
+{{- /* */}}
+{{ $name := printf "%s--%s" $environment.name $.Values.name }}
+{{- if and $environment.production (not $environment.name) }}
+  {{ $name = $.Values.name }}
+{{- end }}
+{{- if and $.Values.overrides.environmentName }}
+  {{ $name = printf "%s-%s--%s" $.Values.overrides.environmentName ($environment.name | default "default") $.Values.name }}
+{{- end }}
+{{- /* */}}
+{{ $namespace := $.Values.global.stagingNamespace }}
+{{- if $environment.production }}
+  {{ $namespace = $.Values.global.prodNamespace }}
+{{- end }}
+{{- /* */}}
+apiVersion: policy/v1
+kind: PodDisruptionBudget
+metadata:
+  name: {{ $name }}
+  namespace: {{ $namespace }}
+  labels:
+    app.kubernetes.io/name: {{ $name }}
+    circuit/service-name: {{ $name }}
+spec:
+  maxUnavailable: 50%
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: {{ $name }}
+---
+{{- end}}
+{{- end}}

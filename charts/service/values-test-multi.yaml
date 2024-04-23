@@ -10,6 +10,11 @@ environments:
       fromSecret:
         name: very--secret
         version: latest
+    A_DISABLED_SECRET_VALUE: 
+      fromSecret:
+        name: disabled--secret
+        version: "1"
+        enabled: false
   metrics:
     enabled: true
     interval: 10s

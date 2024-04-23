@@ -15,6 +15,11 @@ environments:
         name: disabled--secret
         version: "1"
         enabled: false
+    AN_ENABLED_SECRET_VALUE: 
+      fromSecret:
+        name: enabled--secret
+        version: "1"
+        enabled: true
   metrics:
     enabled: true
     interval: 10s

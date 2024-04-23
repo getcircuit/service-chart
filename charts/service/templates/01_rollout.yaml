@@ -192,7 +192,7 @@ spec:
           {{- /* */}}
           env:
           {{- range $key, $value := $environment.env}}
-            {{- if and (kindIs "map" $value) }}
+            {{- if kindIs "map" $value }}
             {{- $secret := $value.fromSecret }}
             {{- if or (not (hasKey $secret "enabled")) ($secret.enabled) }}
           - name: {{ $key | quote }}
